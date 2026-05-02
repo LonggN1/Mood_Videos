@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Videos - Cảm Giác Của Bạn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="ico" href="dial_icon.ico">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            overflow: hidden;
+            background-color: #020617d9;
+            /* bg-slate-950 */
+        }
+
+        .video-progress-bar {
+            transition: width 0.1s linear;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .mood-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mood-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .video-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000000c1;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        .floating-heart {
+            position: absolute;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+            color: #f43f5e;
+            z-index: 100;
+        }
+
+        /* Target the SVG inside Lucide icons */
+        .lucide-heart.active {
+            fill: #f43f5e;
+            color: #f43f5e;
+        }
+
+        .floating-heart svg {
+            fill: currentColor;
+        }
+
+        .glass-modal {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ============================================
+           BURN SEQUENCE: Paper → Crumple → Fire → Ash
+           ============================================ */
+
+        /* Full-screen overlay for the burn cinematic */
+        #burnStage {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: #0a0a0a;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        #burnStage.active {
+            display: flex;
+        }
+
+        /* The paper card shown on stage */
+        #stagePaper {
+            width: 300px;
+            background: #f5f0e8;
+            border-radius: 12px;
+            padding: 24px 28px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8);
+            font-size: 13px;
+            color: #2a1a0a;
+            line-height: 1.6;
+            position: relative;
+            z-index: 10;
+            transform-origin: center;
+        }
+
+        #stagePaper h3 {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #1a0a00;
+        }
+
+        #stagePaper .paper-line {
+            margin: 3px 0;
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            min-height: 14px;
+        }
+
+        /* Stage 1: crumple to ball */
+        .paper-crumple {
+            animation: crumpleToBall 1.4s cubic-bezier(0.6, 0, 0.9, 0.5) forwards;
+        }
+
+        @keyframes crumpleToBall {
+            0% {
+                transform: scale(1) rotate(0deg) skewX(0deg);
+                border-radius: 12px;
+            }
+
+            20% {
+                transform: scale(0.85) rotate(-5deg) skewX(4deg);
+                border-radius: 16px;
+                filter: contrast(1.1);
+            }
+
+            40% {
+                transform: scale(0.62) rotate(12deg) skewX(-10deg) skewY(6deg);
+                border-radius: 30px;
+                filter: contrast(1.3) brightness(0.9);
+            }
+
+            60% {
+                transform: scale(0.38) rotate(-25deg) skewX(18deg) skewY(-12deg);
+                border-radius: 60px;
+                filter: contrast(1.6) brightness(0.75) saturate(0.6);
+            }
+
+            80% {
+                transform: scale(0.18) rotate(45deg) skewX(-28deg) skewY(22deg);
+                border-radius: 200px;
+                filter: brightness(0.5) saturate(0.1);
+            }
+
+            100% {
+                transform: scale(0.09) rotate(65deg);
+                border-radius: 999px;
+                filter: brightness(0.3) saturate(0);
+            }
+        }
+
+        /* Stage 2: paper sits in fire, burns from bottom up */
+        .paper-burning {
+            animation: burnFromBottom 2.2s ease-in forwards;
+        }
+
+        @keyframes burnFromBottom {
+            0% {
+                clip-path: inset(0 0 0% 0);
+                filter: brightness(1);
+            }
+
+            30% {
+                clip-path: inset(0 0 30% 0);
+                filter: brightness(1.4) sepia(0.6);
+            }
+
+            60% {
+                clip-path: inset(0 0 65% 0);
+                filter: brightness(1.8) sepia(1) hue-rotate(-20deg);
+            }
+
+            85% {
+                clip-path: inset(0 0 88% 0);
+                filter: brightness(2.5) sepia(1);
+            }
+
+            100% {
+                clip-path: inset(0 0 100% 0);
+                opacity: 0;
+            }
+        }
+
+        /* Stage 3: fire container */
+        #stageFireBox {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 280px;
+            pointer-events: none;
+        }
+
+        .fl {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+            filter: blur(var(--blur));
+            animation: fw var(--spd) ease-in-out infinite alternate;
+            transform-origin: bottom center;
+        }
+
+        @keyframes fw {
+            0% {
+                transform: translateX(-50%) scaleX(1) scaleY(1) skewX(0deg);
+            }
+
+            30% {
+                transform: translateX(-54%) scaleX(0.86) scaleY(1.08) skewX(-5deg);
+            }
+
+            60% {
+                transform: translateX(-46%) scaleX(1.1) scaleY(0.95) skewX(4deg);
+            }
+
+            100% {
+                transform: translateX(-50%) scaleX(0.92) scaleY(1.04) skewX(-2deg);
+            }
+        }
+
+        #stageFireBox .emb {
+            position: absolute;
+            border-radius: 50%;
+            animation: ef var(--dur) ease-out forwards;
+        }
+
+        @keyframes ef {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--ex), var(--ey)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        #stageFireBox .smk {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(130, 130, 130, 0.35) 0%, transparent 70%);
+            filter: blur(12px);
+            animation: sr var(--dur) ease-out forwards;
+        }
+
+        @keyframes sr {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translateY(-300px) scale(3.5);
+                opacity: 0;
+            }
+        }
+
+        /* Amber glow on dark background while burning */
+        #burnGlow {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center 70%, rgba(255, 80, 0, 0.45) 0%, transparent 55%);
+            animation: gp 0.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes gp {
+            from {
+                opacity: 0.4;
+            }
+
+            to {
+                opacity: 0.8;
+            }
+        }
+
+        /* Fire fade-out */
+        .fire-fade {
+            animation: fadeFire 1.2s ease-out forwards;
+        }
+
+        @keyframes fadeFire {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* ============================================ */
+    </style>
+</head>
+
+<body class="h-screen w-full">
+    <!-- HOME SCREEN -->
+    <div class="home-screen fixed inset-0 flex flex-col bg-slate-950 z-10 overflow-y-auto" id="homeScreen">
+        <div class="px-6 pt-12 pb-4 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">Cảm giác của bạn thế nào?</h1>
+            <p class="text-slate-400">Chọn một tâm trạng để bắt đầu xem video truyền cảm hứng</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 px-6 pb-10 w-full">
+            <button
+                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('not_compare', 'Đang so sánh với người giỏi hơn')">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+                    <i data-lucide="users"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-lg">So Sánh</div>
+                    <div class="text-slate-500 text-sm">Với người giỏi hơn</div>
+                </div>
+            </button>
+
+            <button
+                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-rose-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('stress', 'Đang căng thẳng, nên xả stress đầu óc')">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-colors">
+                    <i data-lucide="zap"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-lg">Căng Thẳng</div>
+                    <div class="text-slate-500 text-sm">Cần sự bình yên</div>
+                </div>
+            </button>
+
+            <button
+                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-blue-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('sad', 'Đang cảm thấy buồn, cần sự vui vẻ')">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                    <i data-lucide="cloud-rain"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-lg">Buồn Bã</div>
+                    <div class="text-slate-500 text-sm">Tìm kiếm niềm vui</div>
+                </div>
+            </button>
+
+            <button
+                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('tired', 'Cảm thấy mệt mỏi, cần thư giãn')">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                    <i data-lucide="battery-low"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-lg">Mệt Mỏi</div>
+                    <div class="text-slate-500 text-sm">Nạp lại năng lượng</div>
+                </div>
+            </button>
+
+            <!-- 
+                ================================================================
+                HƯỚNG DẪN THÊM NÚT CẢM XÚC MỚI (UI):
+                1. Copy đoạn <button>...</button> bên dưới.
+                2. Thay đổi selectMood('tên_mood', 'Tiêu đề hiển thị').
+                3. Thay đổi Icon (data-lucide) và Màu sắc (hover:border-...)
+                ================================================================
+            -->
+            <button
+                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('mildly_bored', 'Chán nhẹ, cần giải trí')">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                    <i data-lucide="coffee"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-lg">Chán Nhẹ</div>
+                    <div class="text-slate-500 text-sm">Tìm chút cảm hứng</div>
+                </div>
+            </button>
+
+            <button
+                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-yellow-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('complain', 'Đang than phiền, cố gắng nỗ lực trong im lặng')">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
+                    <i data-lucide="message-square"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-lg">Than Phiền</div>
+                    <div class="text-slate-500 text-sm">Cứ nói ra cho nhẹ</div>
+                </div>
+            </button>
+
+            <button
+                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-violet-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('vague', 'Mông lung, ngẫm lại cuộc đời')">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-violet-500/10 text-violet-400 group-hover:bg-violet-500 group-hover:text-white transition-colors">
+                    <i data-lucide="cloud"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-lg">Mông Lung</div>
+                    <div class="text-slate-500 text-sm">Không biết mình cảm thấy gì</div>
+                </div>
+            </button>
+
+            <button
+                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-orange-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('burnout', 'Burnout Diary')">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-orange-500/10 text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                    <i data-lucide="flame"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-lg">Burnout</div>
+                    <div class="text-slate-500 text-sm">Đốt cháy áp lực</div>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <div class="header hidden fixed top-0 left-0 right-0 p-4 flex justify-between items-center z-50 transition-opacity duration-300"
+        id="header">
+        <div class="flex items-center gap-3">
+            <button onclick="goHome()"
+                class="w-10 h-10 flex items-center justify-center rounded-full glass-panel text-white hover:bg-white/20 transition-colors">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            </button>
+            <div id="moodTitle" class="text-white font-medium text-lg">Cảm Giác</div>
+        </div>
+        <div id="videoCounter" class="glass-panel px-4 py-1.5 rounded-full text-white text-sm font-medium">
+            <span id="currentVideo">1</span> / <span id="totalVideos">0</span>
+        </div>
+    </div>
+
+    <!-- VIDEO SCREEN -->
+    <div class="video-screen hidden fixed inset-0 bg-black flex flex-col z-20" id="videoScreen">
+        <div class="video-container flex-1 relative overflow-hidden" id="videoContainer"></div>
+
+        <div class="controls fixed bottom-24 right-6 flex flex-col gap-4 z-50">
+            <div class="flex flex-col items-center gap-4">
+                <div id="volumeControl"
+                    class="hidden flex-col items-center bg-slate-900/80 backdrop-blur-md p-3 rounded-2xl border border-white/10 mb-2">
+                    <input type="range" id="volumeSlider" class="h-32 w-1 accent-indigo-500 cursor-pointer"
+                        style="-webkit-appearance: slider-vertical;" min="0" max="100" value="70"
+                        oninput="setVolume(this.value)">
+                </div>
+
+                <button
+                    class="w-14 h-14 rounded-full glass-panel text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg"
+                    id="volumeBtn" onclick="toggleVolumeSlider()">
+                    <i data-lucide="volume-2" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <button
+                class="w-14 h-14 rounded-full glass-panel text-rose-500 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg shadow-rose-500/20"
+                id="likeBtn" title="Thả tim" onclick="likeVideo(this)">
+                <i data-lucide="heart" class="w-6 h-6 fill-transparent transition-colors"></i>
+            </button>
+
+            <button
+                class="w-14 h-14 rounded-full glass-panel text-indigo-400 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg shadow-indigo-500/20"
+                title="Lời chúc" onclick="showFeelBetter()">
+                <i data-lucide="message-square" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- BURNOUT DIARY SCREEN -->
+    <div class="video-screen hidden fixed inset-0 bg-slate-950 flex flex-col z-30" id="burnoutScreen">
+        <div class="w-full h-full px-6 pt-20 pb-6 flex flex-col" id="diaryContent">
+            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2 shrink-0">
+                <i data-lucide="brain" class="text-orange-400 w-5 h-5"></i> Tâm trạng hiện tại
+            </h2>
+
+            <div class="flex gap-4 flex-1 overflow-hidden min-h-0">
+
+                <!-- CỘT 1: Dòng suy nghĩ -->
+                <div
+                    class="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-5 overflow-hidden">
+                    <h3 class="text-slate-300 font-medium mb-1 flex items-center gap-2 text-sm shrink-0">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i> Dòng suy nghĩ thô
+                    </h3>
+                    <p class="text-slate-500 text-xs italic mb-3 shrink-0">Hãy để cảm xúc chảy ra như nó vốn có. Chỉ cần
+                        thật.</p>
+                    <textarea
+                        class="flex-1 w-full bg-black/40 border border-white/10 rounded-xl p-3 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-orange-500/50 transition-colors resize-none text-sm"
+                        placeholder="Viết hết những gì đang trong đầu..."></textarea>
+                </div>
+
+                <!-- CỘT 2: Nguyên nhân -->
+                <div
+                    class="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-5 overflow-y-auto">
+                    <h3 class="text-slate-300 font-medium mb-3 flex items-center gap-2 text-sm shrink-0">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i> Nguyên nhân
+                    </h3>
+                    <div class="flex flex-col gap-2">
+                        <label
+                            class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-white/5">
+                            <input type="checkbox" class="w-4 h-4 rounded text-orange-500">
+                            <span class="text-slate-400 text-sm">Công việc / học tập</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-white/5">
+                            <input type="checkbox" class="w-4 h-4 rounded text-orange-500">
+                            <span class="text-slate-400 text-sm">Gia đình / người thân</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-white/5">
+                            <input type="checkbox" class="w-4 h-4 rounded text-orange-500">
+                            <span class="text-slate-400 text-sm">Người khác / xã hội</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-white/5">
+                            <input type="checkbox" class="w-4 h-4 rounded text-orange-500">
+                            <span class="text-slate-400 text-sm">Bản thân</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-white/5">
+                            <input type="checkbox" class="w-4 h-4 rounded text-orange-500">
+                            <span class="text-slate-400 text-sm">Kỳ vọng / áp lực</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-white/5">
+                            <input type="checkbox" class="w-4 h-4 rounded text-orange-500">
+                            <span class="text-slate-400 text-sm">Thiếu ngủ / cơ mệt</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-white/5">
+                            <input type="checkbox" class="w-4 h-4 rounded text-orange-500">
+                            <span class="text-slate-400 text-sm">Không rõ nguyên nhân</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- CỘT 3: Hoạt động + Nút đốt -->
+                <div class="flex-1 flex flex-col gap-4">
+                    <div
+                        class="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-5 overflow-y-auto">
+                        <h3 class="text-slate-300 font-medium mb-1 flex items-center gap-2 text-sm shrink-0">
+                            <i data-lucide="heart" class="w-4 h-4"></i> Hoạt động thư giãn
+                        </h3>
+                        <p class="text-slate-500 text-xs mb-3 italic shrink-0">Tick những gì bạn muốn làm:</p>
+                        <div class="flex flex-col gap-2">
+                            <label
+                                class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-indigo-500/30">
+                                <input type="checkbox" class="w-4 h-4 rounded text-indigo-500">
+                                <span class="text-slate-400 text-sm">Nghỉ ngơi vài phút</span>
+                            </label>
+                            <label
+                                class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-indigo-500/30">
+                                <input type="checkbox" class="w-4 h-4 rounded text-indigo-500">
+                                <span class="text-slate-400 text-sm">Uống nước / ăn nhẹ</span>
+                            </label>
+                            <label
+                                class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-indigo-500/30">
+                                <input type="checkbox" class="w-4 h-4 rounded text-indigo-500">
+                                <span class="text-slate-400 text-sm">Ra ngoài đi dạo</span>
+                            </label>
+                            <label
+                                class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-indigo-500/30">
+                                <input type="checkbox" class="w-4 h-4 rounded text-indigo-500">
+                                <span class="text-slate-400 text-sm">Nghe nhạc chill</span>
+                            </label>
+                            <label
+                                class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-indigo-500/30">
+                                <input type="checkbox" class="w-4 h-4 rounded text-indigo-500">
+                                <span class="text-slate-400 text-sm">Ngồi thiền / thở sâu</span>
+                            </label>
+                            <label
+                                class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-indigo-500/30">
+                                <input type="checkbox" class="w-4 h-4 rounded text-indigo-500">
+                                <span class="text-slate-400 text-sm">Tắt mạng xã hội</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Nút đốt -->
+                    <div class="shrink-0">
+                        <button id="burnBtn" onclick="burnDiary()"
+                            class="w-full py-4 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-2xl shadow-xl shadow-orange-600/20 transition-all flex items-center justify-center gap-2 group">
+                            <i data-lucide="flame" class="w-5 h-5 group-hover:animate-pulse"></i> ĐÓNG GÓI & ĐỐT CHÁY
+                        </button>
+                        <p class="text-center text-slate-500 text-xs italic mt-2">🕯 Viết xong → đốt sạch áp lực.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- BURN CINEMATIC STAGE (full-screen, above everything) -->
+    <div id="burnStage"></div>
+
+
+    <!-- MODAL (FEEL BETTER) -->
+    <div class="modal hidden fixed inset-0 z-[100] flex items-center justify-center p-6" id="modal">
+        <div class="absolute inset-0 bg-black/20" onclick="closeModal()"></div>
+        <div
+            class="relative glass-modal p-8 rounded-3xl text-center max-w-xs w-full shadow-2xl transform transition-all">
+            <div
+                class="w-12 h-12 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <h2 class="text-xl font-bold text-white mb-2 tracking-tight">Cố Lên Nhé!</h2>
+            <p id="encouragementText" class="text-slate-200 text-sm leading-relaxed mb-6"></p>
+            <button
+                class="w-full py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded-xl border border-white/10 transition-all"
+                onclick="closeModal()">Tiếp tục thôi</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        if (window.lucide) lucide.createIcons();
+
+        // ===== DATA =====
+        const encouragements = [
+            "Mỗi ngày bạn đều trở nên tốt hơn. Hãy tin tưởng vào bản thân!",
+            "Không có gì là không thể. Bạn là người tuyệt vời!",
+            "Những khó khăn là cơ hội để phát triển. Cố lên!",
+            "Bạn làm được! Mỗi bước nhỏ đều quan trọng.",
+            "Hãy nhớ rằng bạn không đơn độc. Chúng tôi luôn ở đây.",
+            "Sự kiên trì mang lại thành công. Cố gắng thêm một chút nữa!",
+            "Bạn xứng đáng có được hạnh phúc. Bạn khác biệt đặc biệt!",
+            "Hôm nay khó khăn, nhưng ngày mai sẽ tốt hơn. Tin vào tương lai!",
+            "Bạn có sức mạnh trong bản thân. Hãy để nó tỏa sáng!",
+            "Thất bại là bước đi trên con đường thành công. Tiếp tục nỗ lực!"
+        ];
+
+        // ===== STATE =====
+        let currentMood = null;
+        let videos = [];
+        let currentVideoIndex = 0;
+        let scrollListenersSetup = false;
+        let startY = 0;
+        let endY = 0;
+        let currentVolume = 0.7;
+        let isMuted = false;
+
+        // ===== FUNCTIONS =====
+        function selectMood(mood, title) {
+            try {
+                currentMood = mood;
+
+                const homeScreen = document.getElementById('homeScreen');
+                if (homeScreen) homeScreen.classList.add('hidden');
+
+                const header = document.getElementById('header');
+                if (header) {
+                    header.classList.remove('hidden');
+                    header.classList.add('flex');
+                }
+
+                const titleEl = document.getElementById('moodTitle');
+                if (titleEl) titleEl.textContent = title;
+
+                if (mood === 'burnout') {
+                    const counter = document.getElementById('videoCounter');
+                    if (counter) counter.style.display = 'none';
+
+                    const burnoutScreen = document.getElementById('burnoutScreen');
+                    if (burnoutScreen) {
+                        burnoutScreen.classList.remove('hidden');
+                        burnoutScreen.classList.add('flex');
+                    }
+                    if (window.lucide) lucide.createIcons();
+                } else {
+                    const videoScreen = document.getElementById('videoScreen');
+                    if (videoScreen) {
+                        videoScreen.classList.remove('hidden');
+                        videoScreen.classList.add('flex');
+                    }
+                    loadVideos(mood);
+                }
+
+                updateAllVolumes();
+                updateVolumeButton();
+
+                if (mood !== 'burnout') setupScroll();
+            } catch (err) {
+                console.error("Error in selectMood:", err);
+            }
+        }
+
+        /* 
+        =======================================================================
+        DƯỚI ĐÂY LÀ DANH SÁCH VIDEO CHO TỪNG CẢM XÚC
+        BẠN MUỐN THÊM VIDEO HOẶC CẢM XÚC MỚI THÌ CHỈ CẦN THÊM VÀO ĐÂY
+        =======================================================================
+        */
+        const VIDEO_DATABASE = {
+            'not_compare': [
+                'video/not_compare/Not_compare.mp4',
+                'video/not_compare/Not_compare_1.mp4',
+                'video/not_compare/Not_compare_2.mp4',
+                'video/not_compare/Not_compare_3.mp4',
+                'video/not_compare/Not_compare_4.mp4',
+                'video/not_compare/Not_compare_5.mp4'
+            ],
+            'sad': [
+                // --- THÊM VIDEO BUỒN VÀO ĐÂY ---
+                // 'video/sad/video1.mp4',
+            ],
+            'tired': [
+                // --- THÊM VIDEO MỆT MỎI VÀO ĐÂY ---
+                'video/tired/7248631577205361925.mp4',
+                'video/tired/7262759861992131848.mp4',
+                'video/tired/7271100943284948267.mp4',
+                'video/tired/7288195084091149570.mp4',
+                'video/tired/7359550287733902593.mp4',
+                'video/tired/7472806835838307591.mp4',
+            ],
+            'mildly_bored': [
+                'video/mildly_bored/10_7629712428754029845.mp4',
+                'video/mildly_bored/1_7621891132552727829.mp4',
+                'video/mildly_bored/2_7593563750360222983.mp4',
+                'video/mildly_bored/3_7614654329076714773.mp4',
+                'video/mildly_bored/4_7635290419043028245.mp4',
+                'video/mildly_bored/5_7634859197917629716.mp4',
+                'video/mildly_bored/6_7633799086625508629.mp4',
+                'video/mildly_bored/7_7632506138671484180.mp4',
+                'video/mildly_bored/8_7631156841279474965.mp4',
+                'video/mildly_bored/9_7630290998895529237.mp4'
+            ],
+            /*
+            'TEN_MOOD_MOI': [
+                'video/folder/video1.mp4',
+                'video/folder/video2.mp4'
+            ]
+            */
+
+            // ================================================================
+            // THÊM VIDEO CHO CÁC MOOD MỚI — CHỈ CẦN COPY THÊM BLOCK NÀY
+            // Key phải trùng với tham số selectMood() trong HTML
+            // Đường dẫn video: 'video/<tên_folder>/<tên_file>.mp4'
+            // ================================================================
+
+            'stress': [
+                // --- THÊM VIDEO CĂng THẲNG VÀO ĐÂY ---
+                'video/stress/7272353186533494024.mp4',
+                'video/stress/7304244699257261313.mp4',
+                'video/stress/7487621953927318792.mp4',
+                'video/stress/7536015782719933713.mp4',
+                'video/stress/7560751970139655440.mp4',
+                'video/stress/7569135478994111752.mp4',
+                'video/stress/7588187526846745863.mp4',
+                'video/stress/7618071882461449479.mp4',
+                'video/stress/7619379480590617877.mp4',
+                'video/stress/7620666730402155784.mp4',
+                'video/stress/7630133982880926983.mp4',
+                'video/stress/7631198017386810644.mp4',
+            ],
+            'complain': [
+                // --- THÊM VIDEO THAN PHIỀN VÀO ĐÂY ---
+                'video/complain/6994367890191404289.mp4',
+                'video/complain/7166455584391171354.mp4',
+                'video/complain/7341024801860996360.mp4',
+                'video/complain/7370720502299593991.mp4',
+                'video/complain/7489778100750830903.mp4',
+                'video/complain/7492146751235706119.mp4',
+                'video/complain/7517103002688474386.mp4',
+                'video/complain/7566629000328580360.mp4',
+                'video/complain/7568834845497986311.mp4',
+                'video/complain/7599631809210567943.mp4',
+                'video/complain/7604280570138381576.mp4',
+                'video/complain/7608941142725414145.mp4',
+                'video/complain/7611510513201155346.mp4',
+                'video/complain/7623653259605232914.mp4',
+                'video/complain/7634505548204969236.mp4',
+                'video/complain/7634562511819361554.mp4',
+            ],
+            'vague': [
+                // --- THÊM VIDEO MÔNG LUNG VÀO ĐÂY ---
+                'video/vague/7249593290088287489.mp4',
+                'video/vague/7326206521308695816.mp4',
+                'video/vague/7340520199399034119.mp4',
+                'video/vague/7380306731236101383.mp4',
+                'video/vague/7508624165675601160.mp4',
+                'video/vague/7521268278829042952.mp4',
+                'video/vague/7608129479738707221.mp4',
+                'video/vague/7612697107702533397.mp4',
+                'video/vague/7613698413644827911.mp4',
+                'video/vague/7620666730402155784.mp4',
+                'video/vague/7632530080375393544.mp4',
+            ],
+        };
+
+        function loadVideos(mood) {
+            const container = document.getElementById('videoContainer');
+
+            // Use mood's own list if it exists; fall back to not_compare only if key is absent
+            const moodList = VIDEO_DATABASE[mood];
+            const videoFiles = (moodList && moodList.length > 0)
+                ? moodList
+                : (VIDEO_DATABASE['not_compare'] || []);
+
+            // Show "no data" state if the mood has an empty list
+            if (moodList && moodList.length === 0) {
+                videos = [];
+                if (container) {
+                    container.innerHTML = '';
+                    const noData = document.createElement('div');
+                    noData.className = 'absolute inset-0 flex flex-col items-center justify-center gap-4 text-center px-8';
+                    noData.innerHTML =
+                        '<div style="font-size:56px">🎬</div>' +
+                        '<div style="color:#94a3b8;font-size:18px;font-weight:600">Chưa có video cho mục này</div>' +
+                        '<div style="color:#475569;font-size:13px;line-height:1.6">Thêm video vào mục <code style="background:#1e293b;padding:2px 6px;border-radius:4px;color:#7dd3fc">\'' + mood + '\'</code><br>trong VIDEO_DATABASE để bắt đầu.</div>';
+                    container.appendChild(noData);
+                }
+                const totalEl = document.getElementById('totalVideos');
+                if (totalEl) totalEl.textContent = '0';
+                return;
+            }
+
+            videos = videoFiles;
+            currentVideoIndex = 0;
+
+            const totalEl = document.getElementById('totalVideos');
+            if (totalEl) totalEl.textContent = videos.length;
+
+            // Lazy: only render first video on load, build others on demand
+            renderWindow(0);
+            showVideo(0);
+        }
+
+        // Renders only the "window" of videos around targetIndex (current ± 1)
+        // Removes video elements outside the window to free memory
+        function renderWindow(targetIndex) {
+            const container = document.getElementById('videoContainer');
+            if (!container) return;
+
+            // Which indices should be in DOM
+            const needed = new Set();
+            if (videos.length > 0) {
+                needed.add(targetIndex);
+                needed.add((targetIndex - 1 + videos.length) % videos.length);
+                needed.add((targetIndex + 1) % videos.length);
+            }
+
+            // Remove items no longer needed
+            container.querySelectorAll('.video-item').forEach(item => {
+                const idx = parseInt(item.dataset.index, 10);
+                if (!needed.has(idx)) {
+                    const v = item.querySelector('video');
+                    if (v) { v.pause(); v.src = ''; v.load(); }
+                    item.remove();
+                }
+            });
+
+            // Add items that are needed but not yet in DOM
+            needed.forEach(idx => {
+                if (container.querySelector('[data-index="' + idx + '"]')) return; // already exists
+
+                const offset = getRelOffset(idx, targetIndex);
+                const item = document.createElement('div');
+                item.className = 'video-item w-full h-full absolute inset-0';
+                // Place at correct slot instantly (no transition for new items)
+                item.style.transform = 'translateY(' + (offset * 100) + '%)';
+                item.style.transition = 'none';
+                item.style.willChange = 'transform';
+                item.dataset.index = idx;
+
+                const videoEl = document.createElement('video');
+                videoEl.src = videos[idx];
+                videoEl.setAttribute('playsinline', '');
+                videoEl.setAttribute('loop', '');
+                videoEl.dataset.index = idx;
+                videoEl.className = 'w-full h-full object-contain';
+                videoEl.preload = idx === targetIndex ? 'auto' : 'metadata';
+
+                const overlay = document.createElement('div');
+                overlay.className = 'video-controls-overlay absolute bottom-0 left-0 right-0 opacity-0 hover:opacity-100 transition-opacity duration-200 flex flex-col justify-end px-6 pt-10 pb-4 bg-gradient-to-t from-black/70 to-transparent';
+                overlay.innerHTML = '<div class="video-progress w-full h-1 bg-white/20 rounded-full cursor-pointer mb-2 overflow-hidden" onclick="seekVideo(event, ' + idx + ')"><div class="video-progress-bar h-full bg-indigo-400 w-0" style="transition: width 0.1s linear;"></div></div><div class="flex justify-between items-center text-white/60 text-xs font-medium"><span class="current-time">0:00</span><span class="duration">0:00</span></div>';
+
+                item.appendChild(videoEl);
+                item.appendChild(overlay);
+                container.appendChild(item);
+
+                videoEl.addEventListener('timeupdate', () => updateProgressUI(item));
+                videoEl.addEventListener('loadedmetadata', () => updateProgressUI(item));
+            });
+        }
+
+        // Calculate relative position offset: -1 (prev), 0 (current), +1 (next)
+        // Handles wrap-around correctly for circular navigation
+        function getRelOffset(idx, currentIdx) {
+            const n = videos.length;
+            if (n <= 1) return 0;
+            let diff = idx - currentIdx;
+            if (diff > 1) diff -= n;
+            if (diff < -1) diff += n;
+            return diff;
+        }
+
+        function showVideo(index) {
+            if (videos.length === 0) return;
+
+            if (index < 0) index = videos.length - 1;
+            else if (index >= videos.length) index = 0;
+
+            currentVideoIndex = index;
+
+            const currentEl = document.getElementById('currentVideo');
+            if (currentEl) currentEl.textContent = currentVideoIndex + 1;
+
+            // Render the 3-item window (new items placed without transition)
+            renderWindow(currentVideoIndex);
+
+            const container = document.getElementById('videoContainer');
+            if (!container) return;
+
+            // rAF ensures new items are painted at their initial position before we animate
+            requestAnimationFrame(() => {
+                container.querySelectorAll('.video-item').forEach(item => {
+                    const idx = parseInt(item.dataset.index, 10);
+                    const offset = getRelOffset(idx, currentVideoIndex);
+
+                    // Slide all items to their new position
+                    item.style.transition = 'transform 0.32s cubic-bezier(0.4, 0, 0.2, 1)';
+                    item.style.transform = 'translateY(' + (offset * 100) + '%)';
+
+                    const video = item.querySelector('video');
+                    if (!video) return;
+
+                    if (idx === currentVideoIndex) {
+                        video.preload = 'auto';
+                        video.currentTime = 0;
+                        video.volume = isMuted ? 0 : currentVolume;
+                        video.play().catch(() => { });
+                    } else {
+                        video.pause();
+                        video.preload = 'metadata';
+                    }
+                });
+            });
+        }
+
+        function nextVideo() { showVideo(currentVideoIndex + 1); }
+        function prevVideo() { showVideo(currentVideoIndex - 1); }
+
+        function updateProgressUI(item) {
+            const video = item.querySelector('video');
+            const progressBar = item.querySelector('.video-progress-bar');
+            const currentTimeEl = item.querySelector('.current-time');
+            const durationEl = item.querySelector('.duration');
+
+            if (video && video.duration && progressBar) {
+                const progress = (video.currentTime / video.duration) * 100;
+                progressBar.style.width = progress + '%';
+
+                if (currentTimeEl) currentTimeEl.textContent = formatTime(video.currentTime);
+                if (durationEl) durationEl.textContent = formatTime(video.duration);
+            }
+        }
+
+        function likeVideo(btn) {
+            // Lucide replaces <i> with <svg>, so we look for both
+            const icon = btn.querySelector('svg') || btn.querySelector('i');
+            if (!icon) return;
+
+            // Once liked, it stays liked (TikTok style)
+            if (!icon.classList.contains('active')) {
+                icon.classList.add('active');
+            }
+
+            // Still trigger animations on every click
+            createFloatingHearts(btn);
+
+            btn.classList.add('scale-125');
+            setTimeout(() => btn.classList.remove('scale-125'), 200);
+        }
+
+        // Unified Spam-Likable Interaction (Desktop & Mobile)
+        let lastTapTime = 0;
+
+        // Mouse support
+        document.getElementById('videoContainer').addEventListener('mousedown', function (e) {
+            handleSpamTap(e.clientX, e.clientY);
+        });
+
+        // Touch support
+        document.getElementById('videoContainer').addEventListener('touchstart', function (e) {
+            const touch = e.touches[0];
+            handleSpamTap(touch.clientX, touch.clientY);
+        });
+
+        function handleSpamTap(x, y) {
+            const now = Date.now();
+            const delay = now - lastTapTime;
+
+            // If rapid tapping (TikTok style: double tap to start, then any rapid tap)
+            if (delay < 350 && delay > 0) {
+                handleLikeInteraction(x, y);
+            }
+
+            lastTapTime = now;
+        }
+
+        function handleLikeInteraction(x, y) {
+            const btn = document.getElementById('likeBtn');
+            if (!btn) return;
+
+            const icon = btn.querySelector('svg') || btn.querySelector('i');
+            if (icon && !icon.classList.contains('active')) {
+                icon.classList.add('active');
+            }
+
+            // Trigger floating hearts at tap position
+            createFloatingHearts(btn, x, y);
+
+            // Pulse button briefly
+            btn.classList.add('scale-125');
+            setTimeout(() => btn.classList.remove('scale-125'), 150);
+        }
+
+        function createFloatingHearts(btn, x, y) {
+            let startX, startY;
+
+            if (x !== undefined && y !== undefined) {
+                startX = x;
+                startY = y;
+            } else {
+                const rect = btn.getBoundingClientRect();
+                startX = rect.left + rect.width / 2;
+                startY = rect.top;
+            }
+
+            const heartSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+
+            // Reduced to 2 hearts per hit for higher spam density support
+            for (let i = 0; i < 2; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.innerHTML = heartSvg;
+
+                const offsetX = (Math.random() - 0.5) * 80;
+                const offsetY = (Math.random() - 0.5) * 40;
+                heart.style.left = (startX + offsetX) + 'px';
+                heart.style.top = (startY + offsetY) + 'px';
+
+                const scale = 0.6 + Math.random() * 0.8;
+                const rotate = (Math.random() - 0.5) * 60;
+                heart.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+
+                document.body.appendChild(heart);
+
+                // Faster animation removal for "spam" feel
+                setTimeout(() => heart.remove(), 800);
+            }
+        }
+
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function seekVideo(event, videoIndex) {
+            const progressBar = event.currentTarget;
+            const rect = progressBar.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percentage = x / rect.width;
+            // Find by data-index since DOM only keeps a window of 3 items
+            const item = document.querySelector('.video-item[data-index="' + videoIndex + '"]');
+            const video = item?.querySelector('video');
+            if (video && video.duration) video.currentTime = percentage * video.duration;
+        }
+
+        function toggleVolumeSlider() {
+            const slider = document.getElementById('volumeControl');
+            if (slider) {
+                slider.classList.toggle('hidden');
+                slider.classList.toggle('flex');
+            }
+        }
+
+        function setVolume(value) {
+            currentVolume = value / 100;
+            isMuted = currentVolume === 0;
+            updateAllVolumes();
+            updateVolumeButton();
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            updateAllVolumes();
+            updateVolumeButton();
+        }
+
+        function updateAllVolumes() {
+            const item = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
+            const video = item?.querySelector('video');
+            if (video) video.volume = isMuted ? 0 : currentVolume;
+        }
+
+        function updateVolumeButton() {
+            const btn = document.getElementById('volumeBtn');
+            if (!btn) return;
+
+            let iconName = 'volume-2';
+            if (isMuted || currentVolume === 0) iconName = 'volume-x';
+            else if (currentVolume < 0.5) iconName = 'volume-1';
+
+            btn.innerHTML = `<i data-lucide="${iconName}" class="w-6 h-6"></i>`;
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function setupScroll() {
+            if (scrollListenersSetup) return;
+            scrollListenersSetup = true;
+
+            document.addEventListener('touchstart', (e) => {
+                if (!document.getElementById('videoScreen').classList.contains('hidden')) {
+                    startY = e.touches[0].clientY;
+                }
+            }, false);
+
+            document.addEventListener('touchend', (e) => {
+                if (!document.getElementById('videoScreen').classList.contains('hidden')) {
+                    endY = e.changedTouches[0].clientY;
+                    const diff = startY - endY;
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) nextVideo();
+                        else prevVideo();
+                    }
+                }
+            }, false);
+
+            document.addEventListener('wheel', (e) => {
+                if (!document.getElementById('videoScreen').classList.contains('hidden')) {
+                    if (Math.abs(e.deltaY) > 10) {
+                        if (e.deltaY > 0) nextVideo();
+                        else prevVideo();
+                    }
+                }
+            }, { passive: true });
+
+            document.addEventListener('keydown', (e) => {
+                if (!document.getElementById('videoScreen').classList.contains('hidden')) {
+                    if (e.key === 'ArrowUp') prevVideo();
+                    else if (e.key === 'ArrowDown') nextVideo();
+                    else if (e.key === ' ') {
+                        const video = document.querySelectorAll('.video-item')[currentVideoIndex]?.querySelector('video');
+                        if (video) video.paused ? video.play() : video.pause();
+                    }
+                }
+            });
+        }
+
+        function goHome() {
+            document.querySelectorAll('video').forEach(video => {
+                video.pause();
+                video.currentTime = 0;
+            });
+            const container = document.getElementById('videoContainer');
+            if (container) container.innerHTML = '';
+            videos = [];
+            currentVideoIndex = 0;
+            currentMood = null;
+
+            // Reset burnout screen
+            stopFire();
+            const stage = document.getElementById('burnStage');
+            if (stage) { stage.classList.remove('active'); stage.innerHTML = ''; }
+            const diary = document.getElementById('diaryContent');
+            const burnBtn = document.getElementById('burnBtn');
+            if (diary) {
+                diary.style.display = '';
+                diary.style.opacity = '1';
+                diary.style.transition = '';
+                diary.querySelectorAll('textarea').forEach(t => t.value = '');
+                diary.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+            }
+            if (burnBtn) { burnBtn.disabled = false; burnBtn.style.opacity = '1'; }
+
+            const counter = document.getElementById('videoCounter');
+            if (counter) counter.style.display = '';
+
+            const vs = document.getElementById('videoScreen');
+            if (vs) { vs.classList.add('hidden'); vs.classList.remove('flex'); }
+            const bs = document.getElementById('burnoutScreen');
+            if (bs) { bs.classList.add('hidden'); bs.classList.remove('flex'); }
+            const hs = document.getElementById('homeScreen');
+            if (hs) hs.classList.remove('hidden');
+            const h = document.getElementById('header');
+            if (h) { h.classList.add('hidden'); h.classList.remove('flex'); }
+            const vc = document.getElementById('volumeControl');
+            if (vc) { vc.classList.add('hidden'); vc.classList.remove('flex'); }
+        }
+
+        function burnDiary() {
+            const diary = document.getElementById('diaryContent');
+            const burnBtn = document.getElementById('burnBtn');
+            if (!diary) return;
+
+            if (burnBtn) { burnBtn.disabled = true; burnBtn.style.opacity = '0.3'; }
+
+            // Collect content from diary to show on paper
+            const textVal = diary.querySelector('textarea')?.value.trim() || '';
+            const checks = [...diary.querySelectorAll('input[type="checkbox"]:checked')]
+                .map(c => c.nextElementSibling?.textContent?.trim())
+                .filter(Boolean);
+
+            // Build paper preview text
+            let paperHTML = '<h3>\uD83D\uDD25 C\u1ea3m x\u00fac c\u1ee7a t\u00f4i</h3>';
+            if (textVal) {
+                paperHTML += textVal.split('\n').slice(0, 5).map(function (l) {
+                    return '<div class="paper-line">' + (l || '&nbsp;') + '</div>';
+                }).join('');
+            }
+            if (checks.length) {
+                paperHTML += '<div style="margin-top:8px;font-size:11px;color:#555">\u2713 ' + checks.slice(0, 4).join(' &nbsp;\u2713 ') + '</div>';
+            }
+            if (!textVal && !checks.length) {
+                paperHTML += '<div class="paper-line">(T\u00f4i c\u1ea3m th\u1ea5y burnout...)</div>';
+            }
+
+            // Fade out diary UI
+            diary.style.transition = 'opacity 0.4s';
+            diary.style.opacity = '0';
+
+            setTimeout(() => {
+                diary.style.display = 'none';
+                runBurnCinematic(paperHTML);
+            }, 400);
+        }
+
+        function runBurnCinematic(paperHTML) {
+            const stage = document.getElementById('burnStage');
+            if (!stage) return;
+
+            // Build stage HTML safely (avoid template literals with HTML inside script tags)
+            const gd = document.createElement('div');
+            gd.id = 'burnGlow';
+            const pd = document.createElement('div');
+            pd.id = 'stagePaper';
+            pd.innerHTML = paperHTML;
+            const fd = document.createElement('div');
+            fd.id = 'stageFireBox';
+            stage.innerHTML = '';
+            stage.appendChild(gd);
+            stage.appendChild(pd);
+            stage.appendChild(fd);
+            stage.classList.add('active');
+
+            const paper = document.getElementById('stagePaper');
+            const fireBox = document.getElementById('stageFireBox');
+
+            // --- PHASE 1: 0.3s - paper appears, then after 0.5s starts crumpling ---
+            setTimeout(() => {
+                paper.classList.add('paper-crumple');
+            }, 500);
+
+            // --- PHASE 2: After crumple (1.9s total), start fire + paper burns ---
+            setTimeout(() => {
+                // Position paper to sit just above fire
+                paper.style.animation = 'none';
+                paper.style.transform = 'scale(0.09) rotate(65deg)';
+                paper.style.borderRadius = '999px';
+                paper.style.transition = 'bottom 0.4s';
+                paper.style.position = 'absolute';
+                paper.style.bottom = 'calc(15% + 20px)';
+                paper.style.left = '50%';
+                paper.style.marginLeft = '-150px'; // half of 300px width
+
+                buildFire(fireBox);
+
+                // After fire warms up, burn the paper from bottom
+                setTimeout(() => {
+                    paper.classList.add('paper-burning');
+                }, 700);
+            }, 1900);
+
+            // --- PHASE 3: Paper is gone, let fire burn 1.5s more ---
+            // paper-burning takes 2.2s → done at 1900 + 700 + 2200 = 4800ms
+
+            // --- PHASE 4: Fade fire out ---
+            setTimeout(() => {
+                stopFire();
+                const fb = document.getElementById('stageFireBox');
+                if (fb) fb.classList.add('fire-fade');
+                const glow = document.getElementById('burnGlow');
+                if (glow) glow.classList.add('fire-fade');
+            }, 5200);
+
+            // --- PHASE 5: Show encouragement & hide stage ---
+            setTimeout(() => {
+                stage.classList.remove('active');
+                showEncouragement("H\u00e3y cho b\u1ea3n th\u00e2n th\u1eddi gian \u0111\u1ec3 th\u1edf. M\u1ed7i c\u1ea3m x\u00fac \u0111\u1ec1u c\u00f3 gi\u00e1 tr\u1ecb ri\u00eang c\u1ee7a n\u00f3.");
+            }, 6600);
+        }
+
+        function buildFire(wrap) {
+            if (!wrap) return;
+
+            // Flame layers: [w, h, bg, blur, speed]
+            [
+                [160, 230, 'radial-gradient(ellipse at 50% 100%, #fff6a0, #ff8c00 45%, #cc2200 100%)', '5px', '0.52s'],
+                [110, 180, 'radial-gradient(ellipse at 50% 100%, #fffde7, #ffb300 40%, #ff4500 100%)', '3px', '0.44s'],
+                [200, 160, 'radial-gradient(ellipse at 50% 100%, #ff6a00, #dd2200 65%, transparent 100%)', '8px', '0.67s'],
+                [80, 130, 'radial-gradient(ellipse at 50% 100%, #ffffff, #ffe082 50%, #ff8f00 100%)', '2px', '0.35s'],
+                [240, 110, 'radial-gradient(ellipse at 50% 100%, #8b1a00, #ff3200 55%, transparent 100%)', '18px', '0.78s'],
+                [65, 100, 'radial-gradient(ellipse at 50% 100%, #fffde7 60%, #ffd740 100%)', '1px', '0.28s'],
+            ].forEach(([w, h, bg, blur, spd]) => {
+                const fl = document.createElement('div');
+                fl.className = 'fl';
+                fl.style.width = w + 'px';
+                fl.style.height = h + 'px';
+                fl.style.background = bg;
+                fl.style.setProperty('--blur', blur);
+                fl.style.setProperty('--spd', spd);
+                wrap.appendChild(fl);
+            });
+
+            // Continuous embers
+            window._emberInterval = setInterval(() => {
+                for (let i = 0; i < 4; i++) {
+                    const e = document.createElement('div');
+                    e.className = 'emb';
+                    const sz = Math.random() * 5 + 2;
+                    e.style.width = sz + 'px';
+                    e.style.height = sz + 'px';
+                    e.style.bottom = '20px';
+                    e.style.left = (50 + Math.random() * 120) + 'px';
+                    e.style.filter = 'blur(0.5px)';
+                    e.style.background = ['#ff4500', '#ff8c00', '#ffd700', '#ff6347', '#fff200'][Math.floor(Math.random() * 5)];
+                    const dur = (0.7 + Math.random() * 1.4).toFixed(2);
+                    e.style.setProperty('--dur', dur + 's');
+                    e.style.setProperty('--ex', ((Math.random() - 0.5) * 280) + 'px');
+                    e.style.setProperty('--ey', (-160 - Math.random() * 260) + 'px');
+                    wrap.appendChild(e);
+                    setTimeout(() => e.remove(), dur * 1000);
+                }
+            }, 75);
+
+            // Smoke
+            window._smokeInterval = setInterval(() => {
+                const s = document.createElement('div');
+                s.className = 'smk';
+                const sz = 40 + Math.random() * 50;
+                const dur = (1.4 + Math.random() * 1.4).toFixed(2);
+                s.style.width = sz + 'px';
+                s.style.height = sz + 'px';
+                s.style.bottom = '120px';
+                s.style.left = (50 + Math.random() * 100) + 'px';
+                s.style.setProperty('--dur', dur + 's');
+                wrap.appendChild(s);
+                setTimeout(() => s.remove(), dur * 1000);
+            }, 200);
+        }
+
+        function stopFire() {
+            clearInterval(window._emberInterval);
+            clearInterval(window._smokeInterval);
+        }
+
+        function showEncouragement(customText) {
+            const textEl = document.getElementById('encouragementText');
+            if (textEl) textEl.textContent = customText || encouragements[Math.floor(Math.random() * encouragements.length)];
+            const modal = document.getElementById('modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function showFeelBetter() {
+            showEncouragement();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            // If we were in burnout, go home after closing
+            if (currentMood === 'burnout') {
+                goHome();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+        window.addEventListener('load', () => { if (window.lucide) lucide.createIcons(); });
+    </script>
+</body>
+
+</html>
