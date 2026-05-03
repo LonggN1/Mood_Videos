@@ -27,6 +27,12 @@
             /* bg-slate-950 */
         }
 
+        #videoScreen {
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
         .video-progress-bar {
             transition: width 0.1s linear;
         }
@@ -62,6 +68,16 @@
             100% {
                 transform: translateY(-100px) scale(0.5);
                 opacity: 0;
+            }
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
             }
         }
 
@@ -439,6 +455,19 @@
             </button>
 
             <button
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-fuchsia-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('all', 'Tùm lum, trộn mọi cảm xúc')">
+                <div
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-fuchsia-500/10 text-fuchsia-400 group-hover:bg-fuchsia-500 group-hover:text-white transition-colors">
+                    <i data-lucide="shuffle" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Tùm Lum</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Trộn ngẫu nhiên tất cả video</div>
+                </div>
+            </button>
+
+            <button
                 class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-orange-500 hover:bg-slate-800/50 text-left"
                 onclick="selectMood('burnout', 'Burnout Diary')">
                 <div
@@ -454,52 +483,29 @@
     </div>
 
     <!-- HEADER -->
-    <div class="header hidden fixed top-0 left-0 right-0 p-3 sm:p-4 flex justify-between items-center z-50 transition-opacity duration-300"
+    <div class="header hidden fixed top-0 left-0 right-0 p-4 sm:p-5 flex justify-between items-center z-50 transition-opacity duration-300 pointer-events-none"
         id="header">
-        <div class="flex items-center gap-2 sm:gap-3">
-            <button onclick="goHome()"
-                class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full glass-panel text-white hover:bg-white/20 transition-colors">
-                <i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-            </button>
-            <div id="moodTitle" class="text-white font-medium text-base sm:text-lg drop-shadow-md">Cảm Giác</div>
-        </div>
-        <div id="videoCounter"
-            class="glass-panel px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-white text-xs sm:text-sm font-medium">
-            <span id="currentVideo">1</span> / <span id="totalVideos">0</span>
-        </div>
+        <button onclick="goHome()"
+            class="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white hover:bg-white/20 transition-colors shadow-lg pointer-events-auto">
+            <i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+        </button>
     </div>
 
     <!-- VIDEO SCREEN -->
     <div class="video-screen hidden fixed inset-0 bg-black flex flex-col z-20" id="videoScreen">
         <div class="video-container flex-1 relative overflow-hidden" id="videoContainer"></div>
 
-        <div class="controls fixed bottom-52 sm:bottom-24 right-4 sm:right-6 flex flex-col gap-3 sm:gap-4 z-50">
-            <div class="hidden sm:flex flex-col items-center gap-3 sm:gap-4">
-                <div id="volumeControl"
-                    class="hidden flex-col items-center bg-slate-900/90 backdrop-blur-md p-2 sm:p-3 rounded-2xl border border-slate-700 sm:border-white/10 mb-1 sm:mb-2 shadow-xl shadow-black/50">
-                    <input type="range" id="volumeSlider" class="h-24 sm:h-32 w-1 accent-indigo-500 cursor-pointer"
-                        style="-webkit-appearance: slider-vertical;" min="0" max="100" value="70"
-                        oninput="setVolume(this.value)">
-                </div>
+        <div id="volumeControl" class="hidden absolute right-16 bottom-32 flex-col items-center bg-black/60 backdrop-blur-md p-2 rounded-2xl border border-white/10 shadow-xl shadow-black/50 transition-opacity z-[70]">
+            <input type="range" id="volumeSlider" class="h-24 sm:h-32 w-1 accent-white cursor-pointer"
+                style="-webkit-appearance: slider-vertical;" min="0" max="100" value="70"
+                oninput="setVolume(this.value)">
+        </div>
 
-                <button
-                    class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-slate-600 sm:border-white/20 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-[0_4px_15px_rgba(0,0,0,0.8)]"
-                    id="volumeBtn" onclick="toggleVolumeSlider()">
-                    <i data-lucide="volume-2" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </button>
+        <!-- Global Progress Bar -->
+        <div id="globalProgressBar" class="absolute bottom-0 left-0 right-0 z-[60] transition-opacity duration-300">
+            <div class="video-progress w-full h-1 sm:h-1.5 bg-white/30 cursor-pointer pointer-events-auto" onclick="seekVideoGlobal(event)">
+                <div id="globalProgressBarInner" class="h-full bg-white w-0" style="transition: width 0.1s linear;"></div>
             </div>
-
-            <button
-                class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-rose-500/30 sm:border-white/20 text-rose-500 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-[0_0_15px_rgba(244,63,94,0.4)] sm:shadow-[0_0_20px_rgba(244,63,94,0.2)]"
-                id="likeBtn" title="Thả tim" onclick="likeVideo(this)">
-                <i data-lucide="heart" class="w-5 h-5 sm:w-6 sm:h-6 fill-transparent transition-colors"></i>
-            </button>
-
-            <button
-                class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-indigo-500/30 sm:border-white/20 text-indigo-400 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-[0_0_15px_rgba(99,102,241,0.4)] sm:shadow-[0_0_20px_rgba(99,102,241,0.2)]"
-                title="Lời chúc" onclick="showFeelBetter()">
-                <i data-lucide="message-square" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-            </button>
         </div>
     </div>
 
@@ -677,8 +683,41 @@
         let isScrolling = false;
         let currentVolume = 0.7;
         let isMuted = false;
+        let currentRawLikes = 0;
 
         // ===== FUNCTIONS =====
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+            return num.toString();
+        }
+
+        function followUser(btn) {
+            if (!btn) return;
+
+            btn.innerHTML = `<i data-lucide="check" class="w-3 h-3"></i>`;
+            if (window.lucide) lucide.createIcons();
+            
+            btn.classList.remove('bg-rose-500');
+            btn.classList.add('bg-emerald-500', 'scale-110');
+            
+            setTimeout(() => {
+                btn.style.transform = 'translate(-50%, 0) scale(0)';
+                btn.style.opacity = '0';
+            }, 600);
+        }
+        const moodConfig = {
+            'not_compare': { icon: 'users', color: 'bg-indigo-500', handle: '@Mood.SoSanh', desc: 'Không cần phải so sánh với ai cả, bạn đang làm rất tốt rồi. 🌟 #beyourself' },
+            'stress': { icon: 'zap', color: 'bg-rose-500', handle: '@Mood.CangThang', desc: 'Hít một hơi thật sâu, mọi thứ rồi sẽ ổn thôi. Nghỉ ngơi một chút nhé. 🍃 #relax' },
+            'sad': { icon: 'cloud-rain', color: 'bg-blue-500', handle: '@Mood.BuonBa', desc: 'Khóc một chút cũng không sao, ngày mai trời lại sáng. 🌧️ #healing' },
+            'tired': { icon: 'battery-low', color: 'bg-emerald-500', handle: '@Mood.MetMoi', desc: 'Cơ thể bạn cần được sạc lại. Hãy thả lỏng và tận hưởng chút bình yên. 🔋 #chill' },
+            'mildly_bored': { icon: 'coffee', color: 'bg-amber-500', handle: '@Mood.ChanNhe', desc: 'Một chút cảm hứng cho ngày dài chán nản. Thử tìm điều mới mẻ xem sao! ☕ #inspire' },
+            'complain': { icon: 'message-square', color: 'bg-yellow-500', handle: '@Mood.ThanPhien', desc: 'Cứ nói ra cho nhẹ lòng, rồi chúng ta lại tiếp tục cố gắng. 💬 #keepgoing' },
+            'vague': { icon: 'cloud', color: 'bg-violet-500', handle: '@Mood.MongLung', desc: 'Đôi khi không biết mình muốn gì cũng là một trải nghiệm. Cứ đi rồi sẽ đến. ☁️ #journey' },
+            'burnout': { icon: 'flame', color: 'bg-orange-500', handle: '@Mood.Burnout', desc: 'Đốt cháy hết những áp lực bủa vây. 🔥 #burnout' },
+            'all': { icon: 'shuffle', color: 'bg-fuchsia-500', handle: '@Mood.TumLum', desc: 'Đầy rẫy những bất ngờ. Khám phá những video ngẫu nhiên nào! 🎭 #random' }
+        };
+
         function selectMood(mood, title) {
             try {
                 currentMood = mood;
@@ -692,8 +731,7 @@
                     header.classList.add('flex');
                 }
 
-                const titleEl = document.getElementById('moodTitle');
-                if (titleEl) titleEl.textContent = title;
+                const config = moodConfig[mood];
 
                 if (mood === 'burnout') {
                     const counter = document.getElementById('videoCounter');
@@ -829,28 +867,43 @@
         function loadVideos(mood) {
             const container = document.getElementById('videoContainer');
 
-            // Use mood's own list if it exists; fall back to not_compare only if key is absent
-            const moodList = VIDEO_DATABASE[mood];
-            const videoFiles = (moodList && moodList.length > 0)
-                ? moodList
-                : (VIDEO_DATABASE['not_compare'] || []);
-
-            // Show "no data" state if the mood has an empty list
-            if (moodList && moodList.length === 0) {
-                videos = [];
-                if (container) {
-                    container.innerHTML = '';
-                    const noData = document.createElement('div');
-                    noData.className = 'absolute inset-0 flex flex-col items-center justify-center gap-4 text-center px-8';
-                    noData.innerHTML =
-                        '<div style="font-size:56px">🎬</div>' +
-                        '<div style="color:#94a3b8;font-size:18px;font-weight:600">Chưa có video cho mục này</div>' +
-                        '<div style="color:#475569;font-size:13px;line-height:1.6">Thêm video vào mục <code style="background:#1e293b;padding:2px 6px;border-radius:4px;color:#7dd3fc">\'' + mood + '\'</code><br>trong VIDEO_DATABASE để bắt đầu.</div>';
-                    container.appendChild(noData);
+            let videoFiles = [];
+            if (mood === 'all') {
+                for (const key in VIDEO_DATABASE) {
+                    if (Array.isArray(VIDEO_DATABASE[key])) {
+                        videoFiles = videoFiles.concat(VIDEO_DATABASE[key]);
+                    }
                 }
-                const totalEl = document.getElementById('totalVideos');
-                if (totalEl) totalEl.textContent = '0';
-                return;
+            } else {
+                // Use mood's own list if it exists; fall back to not_compare only if key is absent
+                const moodList = VIDEO_DATABASE[mood];
+                videoFiles = (moodList && moodList.length > 0)
+                    ? [...moodList]
+                    : [...(VIDEO_DATABASE['not_compare'] || [])];
+
+                // Show "no data" state if the mood has an empty list
+                if (moodList && moodList.length === 0) {
+                    videos = [];
+                    if (container) {
+                        container.innerHTML = '';
+                        const noData = document.createElement('div');
+                        noData.className = 'absolute inset-0 flex flex-col items-center justify-center gap-4 text-center px-8';
+                        noData.innerHTML =
+                            '<div style="font-size:56px">🎬</div>' +
+                            '<div style="color:#94a3b8;font-size:18px;font-weight:600">Chưa có video cho mục này</div>' +
+                            '<div style="color:#475569;font-size:13px;line-height:1.6">Thêm video vào mục <code style="background:#1e293b;padding:2px 6px;border-radius:4px;color:#7dd3fc">\'' + mood + '\'</code><br>trong VIDEO_DATABASE để bắt đầu.</div>';
+                        container.appendChild(noData);
+                    }
+                    const totalEl = document.getElementById('totalVideos');
+                    if (totalEl) totalEl.textContent = '0';
+                    return;
+                }
+            }
+
+            // Shuffle the array to avoid playing in the same order
+            for (let i = videoFiles.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [videoFiles[i], videoFiles[j]] = [videoFiles[j], videoFiles[i]];
             }
 
             videos = videoFiles;
@@ -905,6 +958,7 @@
                 videoEl.src = videos[idx];
                 videoEl.setAttribute('playsinline', '');
                 videoEl.setAttribute('loop', '');
+                videoEl.setAttribute('disablePictureInPicture', '');
                 videoEl.dataset.index = idx;
                 videoEl.className = 'w-full h-full object-contain';
                 videoEl.preload = idx === targetIndex ? 'auto' : 'metadata';
@@ -914,21 +968,124 @@
                 loadingOverlay.className = 'absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-10 transition-opacity duration-300 pointer-events-none';
                 loadingOverlay.innerHTML = '<div class="w-12 h-12 border-4 border-white/20 border-t-indigo-500 rounded-full animate-spin shadow-[0_0_15px_rgba(99,102,241,0.5)]"></div>';
 
+                const videoPath = videos[idx];
+                let activeMood = currentMood;
+                if (currentMood === 'all') {
+                    const parts = videoPath.split('/');
+                    if (parts.length > 1) {
+                        activeMood = parts[1];
+                    }
+                }
+                const config = moodConfig[activeMood] || moodConfig['all'] || { icon: 'user', color: 'bg-slate-800', handle: '@Mood', desc: '...' };
+                let likes = parseInt(localStorage.getItem('like_' + videoPath));
+                if (isNaN(likes)) {
+                    likes = Math.floor(Math.random() * 900) + 100;
+                    localStorage.setItem('like_' + videoPath, likes);
+                }
+                const comments = Math.floor(Math.random() * 500) + 20;
+                const saves = Math.floor(Math.random() * 300) + 5;
+
                 const overlay = document.createElement('div');
-                overlay.className = 'video-controls-overlay absolute bottom-0 left-0 right-0 opacity-0 hover:opacity-100 transition-opacity duration-200 flex flex-col justify-end px-6 pt-10 pb-4 bg-gradient-to-t from-black/70 to-transparent';
-                overlay.innerHTML = '<div class="video-progress w-full h-1 bg-white/20 rounded-full cursor-pointer mb-2 overflow-hidden" onclick="seekVideo(event, ' + idx + ')"><div class="video-progress-bar h-full bg-indigo-400 w-0" style="transition: width 0.1s linear;"></div></div><div class="flex justify-between items-center text-white/60 text-xs font-medium"><span class="current-time">0:00</span><span class="duration">0:00</span></div>';
+                overlay.className = 'absolute inset-0 pointer-events-none z-40';
+                
+                let volIconName = isMuted || currentVolume === 0 ? 'volume-x' : 'music';
+                let spinState = isMuted || currentVolume === 0 ? 'paused' : 'running';
+
+                overlay.innerHTML = `
+                    <!-- TIKTOK STYLE INFO -->
+                    <div class="absolute bottom-6 sm:bottom-10 left-3 sm:left-5 w-[75%] sm:w-[60%] pointer-events-none">
+                        <h3 class="text-white font-bold text-[15px] sm:text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mb-1">${config.handle}</h3>
+                        <p class="text-white text-[13px] sm:text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] leading-snug mb-2">${config.desc}</p>
+                        <div class="flex items-center gap-2 text-white font-medium text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                            <i data-lucide="music" class="w-3.5 h-3.5"></i>
+                            <div class="w-40 sm:w-48 overflow-hidden relative">
+                                <div class="whitespace-nowrap inline-block animate-[marquee_8s_linear_infinite]">
+                                    Âm thanh gốc - Chữa Lành Tâm Hồn
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TIKTOK STYLE CONTROLS -->
+                    <div class="absolute bottom-20 sm:bottom-32 right-3 sm:right-5 flex flex-col gap-4 sm:gap-5 items-center pointer-events-auto">
+                        <!-- Avatar -->
+                        <div class="relative mb-2">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-[1.5px] border-white overflow-hidden flex items-center justify-center ${config.color}">
+                                <i data-lucide="${config.icon}" class="w-5 h-5 sm:w-6 sm:h-6 text-white"></i>
+                            </div>
+                            <div class="follow-btn absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-rose-500 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold cursor-pointer hover:scale-110 active:scale-95 transition-all shadow-md" onclick="followUser(this)">
+                                <i data-lucide="plus" class="w-3 h-3"></i>
+                            </div>
+                        </div>
+
+                        <!-- Like -->
+                        <div class="flex flex-col items-center gap-1 cursor-pointer transition-transform duration-150 like-btn" onclick="likeVideo(this, '${videoPath}')" data-raw-likes="${likes}">
+                            <div class="text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)]">
+                                <i data-lucide="heart" class="w-8 h-8 sm:w-9 sm:h-9 fill-transparent transition-colors duration-200 like-icon"></i>
+                            </div>
+                            <span class="like-counter text-white font-semibold text-[11px] sm:text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">${formatNumber(likes)}</span>
+                        </div>
+
+                        <!-- Comments -->
+                        <div class="flex flex-col items-center gap-1 cursor-pointer hover:scale-110 active:scale-95 transition-transform duration-150" onclick="showFeelBetter()">
+                            <div class="text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)]">
+                                <i data-lucide="message-circle" class="w-8 h-8 sm:w-9 sm:h-9"></i>
+                            </div>
+                            <span class="text-white font-semibold text-[11px] sm:text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">${formatNumber(comments)}</span>
+                        </div>
+
+                        <!-- Bookmark -->
+                        <div class="flex flex-col items-center gap-1 cursor-pointer hover:scale-110 active:scale-95 transition-transform duration-150" onclick="saveVideo(this)" data-raw-saves="${saves}">
+                            <div class="text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)]">
+                                <i data-lucide="bookmark" class="w-8 h-8 sm:w-9 sm:h-9 fill-transparent transition-colors duration-200"></i>
+                            </div>
+                            <span class="save-counter text-white font-semibold text-[11px] sm:text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">${formatNumber(saves)}</span>
+                        </div>
+
+                        <!-- Share -->
+                        <div class="flex flex-col items-center gap-1 cursor-pointer hover:scale-110 active:scale-95 transition-transform duration-150" onclick="shareVideo()">
+                            <div class="text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)]">
+                                <i data-lucide="share" class="w-8 h-8 sm:w-9 sm:h-9 fill-white"></i>
+                            </div>
+                            <span class="text-white font-semibold text-[11px] sm:text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">Chia sẻ</span>
+                        </div>
+                        
+                        <!-- Music -->
+                        <div class="mt-4 relative flex items-center justify-center">
+                            <div class="volume-btn w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1e1e1e] border-[7px] border-[#2f2f2f] flex items-center justify-center animate-[spin_4s_linear_infinite] drop-shadow-xl cursor-pointer pointer-events-auto" style="animation-play-state: ${spinState}" onclick="toggleVolumeSlider()">
+                                <i data-lucide="${volIconName}" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Play Icon Overlay
+                const playOverlay = document.createElement('div');
+                playOverlay.className = 'absolute inset-0 flex items-center justify-center pointer-events-none z-30 transition-opacity duration-150 opacity-0';
+                playOverlay.innerHTML = '<i data-lucide="play" class="w-10 h-10 sm:w-12 sm:h-12 text-white/40 fill-white/40 drop-shadow-md"></i>';
 
                 item.appendChild(videoEl);
                 item.appendChild(loadingOverlay);
+                item.appendChild(playOverlay);
                 item.appendChild(overlay);
                 container.appendChild(item);
+
+                if (window.lucide) lucide.createIcons();
 
                 videoEl.addEventListener('timeupdate', () => updateProgressUI(item));
                 videoEl.addEventListener('loadedmetadata', () => updateProgressUI(item));
                 
                 // Loading events
                 videoEl.addEventListener('waiting', () => { loadingOverlay.style.opacity = '1'; });
-                videoEl.addEventListener('playing', () => { loadingOverlay.style.opacity = '0'; });
+                videoEl.addEventListener('playing', () => { 
+                    loadingOverlay.style.opacity = '0'; 
+                    playOverlay.classList.remove('opacity-100');
+                    playOverlay.classList.add('opacity-0');
+                });
+                videoEl.addEventListener('pause', () => { 
+                    playOverlay.classList.remove('opacity-0');
+                    playOverlay.classList.add('opacity-100');
+                });
                 videoEl.addEventListener('canplay', () => { loadingOverlay.style.opacity = '0'; });
             });
         }
@@ -951,15 +1108,17 @@
             else if (index >= videos.length) index = 0;
 
             currentVideoIndex = index;
+            const currentVideoPath = videos[currentVideoIndex];
 
             const currentEl = document.getElementById('currentVideo');
             if (currentEl) currentEl.textContent = currentVideoIndex + 1;
 
-            // Reset like button for the new video
-            const likeBtn = document.getElementById('likeBtn');
-            if (likeBtn) {
-                const icon = likeBtn.querySelector('svg') || likeBtn.querySelector('i');
-                if (icon) icon.classList.remove('active');
+            const globalBar = document.getElementById('globalProgressBar');
+            if (globalBar) {
+                globalBar.style.opacity = '0';
+                setTimeout(() => {
+                    globalBar.style.opacity = '1';
+                }, 450); // Matches the scroll transition duration
             }
 
             // Render the 3-item window (new items placed without transition)
@@ -1000,17 +1159,15 @@
         function prevVideo() { showVideo(currentVideoIndex - 1); }
 
         function updateProgressUI(item) {
+            const idx = parseInt(item.dataset.index, 10);
+            if (idx !== currentVideoIndex) return;
+
             const video = item.querySelector('video');
-            const progressBar = item.querySelector('.video-progress-bar');
-            const currentTimeEl = item.querySelector('.current-time');
-            const durationEl = item.querySelector('.duration');
-
-            if (video && video.duration && progressBar) {
+            const globalBarInner = document.getElementById('globalProgressBarInner');
+            
+            if (video && video.duration && globalBarInner) {
                 const progress = (video.currentTime / video.duration) * 100;
-                progressBar.style.width = progress + '%';
-
-                if (currentTimeEl) currentTimeEl.textContent = formatTime(video.currentTime);
-                if (durationEl) durationEl.textContent = formatTime(video.duration);
+                globalBarInner.style.width = progress + '%';
             }
         }
 
@@ -1022,56 +1179,174 @@
             // Once liked, it stays liked (TikTok style)
             if (!icon.classList.contains('active')) {
                 icon.classList.add('active');
+                // Increment counter
+                currentRawLikes++;
+                localStorage.setItem('like_' + videos[currentVideoIndex], currentRawLikes);
+                
+                const counter = btn.querySelector('#likeCounter');
+                if(counter) {
+                    counter.textContent = formatNumber(currentRawLikes);
+                }
             }
 
             // Still trigger animations on every click
             createFloatingHearts(btn);
 
-            btn.classList.add('scale-125');
-            setTimeout(() => btn.classList.remove('scale-125'), 200);
+            btn.classList.add('scale-110');
+            setTimeout(() => btn.classList.remove('scale-110'), 150);
         }
 
         // Unified Spam-Likable Interaction (Desktop & Mobile)
         let lastTapTime = 0;
+        let singleTapTimeout;
 
-        // Mouse support
-        document.getElementById('videoContainer').addEventListener('mousedown', function (e) {
+        document.getElementById('videoContainer').addEventListener('click', function (e) {
+            if (e.target.closest('.pointer-events-auto')) return;
             handleSpamTap(e.clientX, e.clientY);
-        });
-
-        // Touch support
-        document.getElementById('videoContainer').addEventListener('touchstart', function (e) {
-            const touch = e.touches[0];
-            handleSpamTap(touch.clientX, touch.clientY);
         });
 
         function handleSpamTap(x, y) {
             const now = Date.now();
             const delay = now - lastTapTime;
 
-            // If rapid tapping (TikTok style: double tap to start, then any rapid tap)
-            if (delay < 350 && delay > 0) {
+            const currentItem = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
+            if (!currentItem) return;
+            const video = currentItem.querySelector('video');
+            if (!video) return;
+
+            if (delay < 300 && delay > 0) {
+                // Double tap detected -> Trigger Like
+                clearTimeout(singleTapTimeout);
                 handleLikeInteraction(x, y);
+                
+                // Ensure video is playing (in case timeout executed just before this tap)
+                if (video.paused) {
+                    video.play().catch(()=>{});
+                }
+            } else {
+                // Single tap detected
+                if (video.paused) {
+                    // Play immediately to respect Safari user gesture restrictions
+                    video.play().catch(()=>{});
+                } else {
+                    // Delay pause to allow window for double tap
+                    singleTapTimeout = setTimeout(() => {
+                        video.pause();
+                    }, 300);
+                }
             }
 
             lastTapTime = now;
         }
 
         function handleLikeInteraction(x, y) {
-            const btn = document.getElementById('likeBtn');
+            const currentItem = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
+            if (!currentItem) return;
+            const btn = currentItem.querySelector('.like-btn');
             if (!btn) return;
 
-            const icon = btn.querySelector('svg') || btn.querySelector('i');
+            const icon = btn.querySelector('.like-icon') || btn.querySelector('svg') || btn.querySelector('i');
             if (icon && !icon.classList.contains('active')) {
                 icon.classList.add('active');
+                
+                let currentLikes = parseInt(btn.dataset.rawLikes) || 0;
+                currentLikes++;
+                btn.dataset.rawLikes = currentLikes;
+                const videoPath = videos[currentVideoIndex];
+                localStorage.setItem('like_' + videoPath, currentLikes);
+                
+                const counter = btn.querySelector('.like-counter');
+                if(counter) {
+                    counter.textContent = formatNumber(currentLikes);
+                }
             }
 
             // Trigger floating hearts at tap position
             createFloatingHearts(btn, x, y);
 
             // Pulse button briefly
-            btn.classList.add('scale-125');
-            setTimeout(() => btn.classList.remove('scale-125'), 150);
+            btn.classList.add('scale-110');
+            setTimeout(() => btn.classList.remove('scale-110'), 150);
+        }
+
+        function shareVideo() {
+            const url = 'https://longgn1.github.io/Mood_Videos/';
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast('Đã copy link chia sẻ web Mood_Videos');
+                }).catch(() => {
+                    fallbackCopyTextToClipboard(url);
+                });
+            } else {
+                fallbackCopyTextToClipboard(url);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Đã copy link chia sẻ web Mood_Videos');
+            } catch (err) {
+                showToast('Không thể copy link, vui lòng thử lại.');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(message) {
+            let toast = document.getElementById('toastNotification');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toastNotification';
+                toast.className = 'fixed top-10 left-1/2 transform -translate-x-1/2 bg-white text-slate-800 px-4 py-2 rounded-full font-medium text-sm shadow-xl z-[100] transition-all duration-300 opacity-0 pointer-events-none translate-y-[-20px] text-center whitespace-nowrap border border-gray-100';
+                document.body.appendChild(toast);
+            }
+            
+            toast.textContent = message;
+            
+            // Force reflow
+            void toast.offsetWidth;
+            
+            // Animate in
+            toast.classList.remove('opacity-0', 'translate-y-[-20px]');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            // Animate out
+            if (toast.hideTimeout) clearTimeout(toast.hideTimeout);
+            toast.hideTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-[-20px]');
+            }, 3000);
+        }
+
+        function saveVideo(btn) {
+            const icon = btn.querySelector('svg') || btn.querySelector('i');
+            const counter = btn.querySelector('.save-counter');
+            if (!icon || !counter) return;
+
+            let saves = parseInt(btn.dataset.rawSaves);
+            if (isNaN(saves)) saves = 0;
+            
+            if (icon.classList.contains('fill-[#fde047]')) {
+                icon.classList.remove('fill-[#fde047]', 'text-[#fde047]');
+                icon.classList.add('fill-transparent');
+                saves = Math.max(0, saves - 1);
+            } else {
+                icon.classList.remove('fill-transparent');
+                icon.classList.add('fill-[#fde047]', 'text-[#fde047]'); // Yellow fill for save
+                saves += 1;
+            }
+            
+            btn.dataset.rawSaves = saves;
+            counter.textContent = formatNumber(saves);
+            
+            btn.classList.add('scale-110');
+            setTimeout(() => btn.classList.remove('scale-110'), 150);
         }
 
         function createFloatingHearts(btn, x, y) {
@@ -1117,15 +1392,18 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function seekVideo(event, videoIndex) {
+        function seekVideoGlobal(event) {
             const progressBar = event.currentTarget;
             const rect = progressBar.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const percentage = x / rect.width;
-            // Find by data-index since DOM only keeps a window of 3 items
-            const item = document.querySelector('.video-item[data-index="' + videoIndex + '"]');
-            const video = item?.querySelector('video');
-            if (video && video.duration) video.currentTime = percentage * video.duration;
+            
+            const currentItem = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
+            if (!currentItem) return;
+            const video = currentItem.querySelector('video');
+            if (video && video.duration) {
+                video.currentTime = percentage * video.duration;
+            }
         }
 
         function toggleVolumeSlider() {
@@ -1156,14 +1434,18 @@
         }
 
         function updateVolumeButton() {
-            const btn = document.getElementById('volumeBtn');
-            if (!btn) return;
-
-            let iconName = 'volume-2';
-            if (isMuted || currentVolume === 0) iconName = 'volume-x';
-            else if (currentVolume < 0.5) iconName = 'volume-1';
-
-            btn.innerHTML = `<i data-lucide="${iconName}" class="w-6 h-6"></i>`;
+            const btns = document.querySelectorAll('.volume-btn');
+            btns.forEach(btn => {
+                let iconName = 'music';
+                if (isMuted || currentVolume === 0) {
+                    iconName = 'volume-x';
+                    btn.style.animationPlayState = 'paused';
+                } else {
+                    iconName = 'music';
+                    btn.style.animationPlayState = 'running';
+                }
+                btn.innerHTML = `<i data-lucide="${iconName}" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white"></i>`;
+            });
             if (window.lucide) lucide.createIcons();
         }
 
@@ -1440,7 +1722,6 @@
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
             }
-            if (window.lucide) lucide.createIcons();
         }
 
         function showFeelBetter() {
