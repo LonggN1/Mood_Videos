@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mood Videos - Cảm Giác Của Bạn</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -13,6 +13,7 @@
         body {
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
             overflow: hidden;
             background-color: #020617d9;
             /* bg-slate-950 */
@@ -323,61 +324,62 @@
 <body class="h-screen w-full">
     <!-- HOME SCREEN -->
     <div class="home-screen fixed inset-0 flex flex-col bg-slate-950 z-10 overflow-y-auto" id="homeScreen">
-        <div class="px-6 pt-12 pb-4 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">Cảm giác của bạn thế nào?</h1>
-            <p class="text-slate-400">Chọn một tâm trạng để bắt đầu xem video truyền cảm hứng</p>
+        <div class="px-4 sm:px-6 pt-10 sm:pt-12 pb-4 text-center">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">Cảm giác của bạn thế
+                nào?</h1>
+            <p class="text-slate-400 text-sm sm:text-base">Chọn một tâm trạng để bắt đầu xem video truyền cảm hứng</p>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 px-6 pb-10 w-full">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 px-4 sm:px-6 pb-10 w-full">
             <button
-                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500 hover:bg-slate-800/50 text-left"
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500 hover:bg-slate-800/50 text-left"
                 onclick="selectMood('not_compare', 'Đang so sánh với người giỏi hơn')">
                 <div
-                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                    <i data-lucide="users"></i>
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+                    <i data-lucide="users" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </div>
                 <div>
-                    <div class="text-white font-semibold text-lg">So Sánh</div>
-                    <div class="text-slate-500 text-sm">Với người giỏi hơn</div>
+                    <div class="text-white font-semibold text-base sm:text-lg">So Sánh</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Với người giỏi hơn</div>
                 </div>
             </button>
 
             <button
-                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-rose-500 hover:bg-slate-800/50 text-left"
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-rose-500 hover:bg-slate-800/50 text-left"
                 onclick="selectMood('stress', 'Đang căng thẳng, nên xả stress đầu óc')">
                 <div
-                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-colors">
-                    <i data-lucide="zap"></i>
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-rose-500/10 text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-colors">
+                    <i data-lucide="zap" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </div>
                 <div>
-                    <div class="text-white font-semibold text-lg">Căng Thẳng</div>
-                    <div class="text-slate-500 text-sm">Cần sự bình yên</div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Căng Thẳng</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Cần sự bình yên</div>
                 </div>
             </button>
 
             <button
-                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-blue-500 hover:bg-slate-800/50 text-left"
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-blue-500 hover:bg-slate-800/50 text-left"
                 onclick="selectMood('sad', 'Đang cảm thấy buồn, cần sự vui vẻ')">
                 <div
-                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                    <i data-lucide="cloud-rain"></i>
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                    <i data-lucide="cloud-rain" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </div>
                 <div>
-                    <div class="text-white font-semibold text-lg">Buồn Bã</div>
-                    <div class="text-slate-500 text-sm">Tìm kiếm niềm vui</div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Buồn Bã</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Tìm kiếm niềm vui</div>
                 </div>
             </button>
 
             <button
-                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/50 text-left"
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/50 text-left"
                 onclick="selectMood('tired', 'Cảm thấy mệt mỏi, cần thư giãn')">
                 <div
-                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-                    <i data-lucide="battery-low"></i>
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                    <i data-lucide="battery-low" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </div>
                 <div>
-                    <div class="text-white font-semibold text-lg">Mệt Mỏi</div>
-                    <div class="text-slate-500 text-sm">Nạp lại năng lượng</div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Mệt Mỏi</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Nạp lại năng lượng</div>
                 </div>
             </button>
 
@@ -390,70 +392,71 @@
                 ================================================================
             -->
             <button
-                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-500 hover:bg-slate-800/50 text-left"
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-500 hover:bg-slate-800/50 text-left"
                 onclick="selectMood('mildly_bored', 'Chán nhẹ, cần giải trí')">
                 <div
-                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 group-hover:bg-amber-500 group-hover:text-white transition-colors">
-                    <i data-lucide="coffee"></i>
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-amber-500/10 text-amber-400 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                    <i data-lucide="coffee" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </div>
                 <div>
-                    <div class="text-white font-semibold text-lg">Chán Nhẹ</div>
-                    <div class="text-slate-500 text-sm">Tìm chút cảm hứng</div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Chán Nhẹ</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Tìm chút cảm hứng</div>
                 </div>
             </button>
 
             <button
-                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-yellow-500 hover:bg-slate-800/50 text-left"
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-yellow-500 hover:bg-slate-800/50 text-left"
                 onclick="selectMood('complain', 'Đang than phiền, cố gắng nỗ lực trong im lặng')">
                 <div
-                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
-                    <i data-lucide="message-square"></i>
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-yellow-500/10 text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
+                    <i data-lucide="message-square" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </div>
                 <div>
-                    <div class="text-white font-semibold text-lg">Than Phiền</div>
-                    <div class="text-slate-500 text-sm">Cứ nói ra cho nhẹ</div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Than Phiền</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Cứ nói ra cho nhẹ</div>
                 </div>
             </button>
 
             <button
-                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-violet-500 hover:bg-slate-800/50 text-left"
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-violet-500 hover:bg-slate-800/50 text-left"
                 onclick="selectMood('vague', 'Mông lung, ngẫm lại cuộc đời')">
                 <div
-                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-violet-500/10 text-violet-400 group-hover:bg-violet-500 group-hover:text-white transition-colors">
-                    <i data-lucide="cloud"></i>
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-violet-500/10 text-violet-400 group-hover:bg-violet-500 group-hover:text-white transition-colors">
+                    <i data-lucide="cloud" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </div>
                 <div>
-                    <div class="text-white font-semibold text-lg">Mông Lung</div>
-                    <div class="text-slate-500 text-sm">Không biết mình cảm thấy gì</div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Mông Lung</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Không biết mình cảm thấy gì</div>
                 </div>
             </button>
 
             <button
-                class="mood-card group flex items-center gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-orange-500 hover:bg-slate-800/50 text-left"
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-orange-500 hover:bg-slate-800/50 text-left"
                 onclick="selectMood('burnout', 'Burnout Diary')">
                 <div
-                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-orange-500/10 text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                    <i data-lucide="flame"></i>
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-orange-500/10 text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                    <i data-lucide="flame" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </div>
                 <div>
-                    <div class="text-white font-semibold text-lg">Burnout</div>
-                    <div class="text-slate-500 text-sm">Đốt cháy áp lực</div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Burnout</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Đốt cháy áp lực</div>
                 </div>
             </button>
         </div>
     </div>
 
     <!-- HEADER -->
-    <div class="header hidden fixed top-0 left-0 right-0 p-4 flex justify-between items-center z-50 transition-opacity duration-300"
+    <div class="header hidden fixed top-0 left-0 right-0 p-3 sm:p-4 flex justify-between items-center z-50 transition-opacity duration-300"
         id="header">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-3">
             <button onclick="goHome()"
-                class="w-10 h-10 flex items-center justify-center rounded-full glass-panel text-white hover:bg-white/20 transition-colors">
-                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full glass-panel text-white hover:bg-white/20 transition-colors">
+                <i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </button>
-            <div id="moodTitle" class="text-white font-medium text-lg">Cảm Giác</div>
+            <div id="moodTitle" class="text-white font-medium text-base sm:text-lg drop-shadow-md">Cảm Giác</div>
         </div>
-        <div id="videoCounter" class="glass-panel px-4 py-1.5 rounded-full text-white text-sm font-medium">
+        <div id="videoCounter"
+            class="glass-panel px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-white text-xs sm:text-sm font-medium">
             <span id="currentVideo">1</span> / <span id="totalVideos">0</span>
         </div>
     </div>
@@ -462,52 +465,54 @@
     <div class="video-screen hidden fixed inset-0 bg-black flex flex-col z-20" id="videoScreen">
         <div class="video-container flex-1 relative overflow-hidden" id="videoContainer"></div>
 
-        <div class="controls fixed bottom-24 right-6 flex flex-col gap-4 z-50">
-            <div class="flex flex-col items-center gap-4">
+        <div class="controls fixed bottom-52 sm:bottom-24 right-4 sm:right-6 flex flex-col gap-3 sm:gap-4 z-50">
+            <div class="hidden sm:flex flex-col items-center gap-3 sm:gap-4">
                 <div id="volumeControl"
-                    class="hidden flex-col items-center bg-slate-900/80 backdrop-blur-md p-3 rounded-2xl border border-white/10 mb-2">
-                    <input type="range" id="volumeSlider" class="h-32 w-1 accent-indigo-500 cursor-pointer"
+                    class="hidden flex-col items-center bg-slate-900/90 backdrop-blur-md p-2 sm:p-3 rounded-2xl border border-slate-700 sm:border-white/10 mb-1 sm:mb-2 shadow-xl shadow-black/50">
+                    <input type="range" id="volumeSlider" class="h-24 sm:h-32 w-1 accent-indigo-500 cursor-pointer"
                         style="-webkit-appearance: slider-vertical;" min="0" max="100" value="70"
                         oninput="setVolume(this.value)">
                 </div>
 
                 <button
-                    class="w-14 h-14 rounded-full glass-panel text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg"
+                    class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-slate-700 sm:border-white/20 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl shadow-black/50"
                     id="volumeBtn" onclick="toggleVolumeSlider()">
-                    <i data-lucide="volume-2" class="w-6 h-6"></i>
+                    <i data-lucide="volume-2" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </button>
             </div>
 
             <button
-                class="w-14 h-14 rounded-full glass-panel text-rose-500 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg shadow-rose-500/20"
+                class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-slate-700 sm:border-white/20 text-rose-500 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl shadow-black/50 sm:shadow-rose-500/20"
                 id="likeBtn" title="Thả tim" onclick="likeVideo(this)">
-                <i data-lucide="heart" class="w-6 h-6 fill-transparent transition-colors"></i>
+                <i data-lucide="heart" class="w-5 h-5 sm:w-6 sm:h-6 fill-transparent transition-colors"></i>
             </button>
 
             <button
-                class="w-14 h-14 rounded-full glass-panel text-indigo-400 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg shadow-indigo-500/20"
+                class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-slate-700 sm:border-white/20 text-indigo-400 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl shadow-black/50 sm:shadow-indigo-500/20"
                 title="Lời chúc" onclick="showFeelBetter()">
-                <i data-lucide="message-square" class="w-6 h-6"></i>
+                <i data-lucide="message-square" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             </button>
         </div>
     </div>
 
     <!-- BURNOUT DIARY SCREEN -->
     <div class="video-screen hidden fixed inset-0 bg-slate-950 flex flex-col z-30" id="burnoutScreen">
-        <div class="w-full h-full px-6 pt-20 pb-6 flex flex-col" id="diaryContent">
-            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2 shrink-0">
+        <div class="w-full h-full px-4 sm:px-6 pt-16 sm:pt-20 pb-4 sm:pb-6 flex flex-col" id="diaryContent">
+            <h2 class="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 flex items-center gap-2 shrink-0">
                 <i data-lucide="brain" class="text-orange-400 w-5 h-5"></i> Tâm trạng hiện tại
             </h2>
 
-            <div class="flex gap-4 flex-1 overflow-hidden min-h-0">
+            <div
+                class="flex flex-col md:flex-row gap-4 flex-1 overflow-y-auto md:overflow-hidden min-h-0 pb-20 md:pb-0">
 
                 <!-- CỘT 1: Dòng suy nghĩ -->
                 <div
-                    class="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-5 overflow-hidden">
+                    class="flex-none h-56 md:flex-1 md:h-auto flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 sm:p-5 overflow-hidden">
                     <h3 class="text-slate-300 font-medium mb-1 flex items-center gap-2 text-sm shrink-0">
                         <i data-lucide="message-circle" class="w-4 h-4"></i> Dòng suy nghĩ thô
                     </h3>
-                    <p class="text-slate-500 text-xs italic mb-3 shrink-0">Hãy để cảm xúc chảy ra như nó vốn có. Chỉ cần
+                    <p class="text-slate-500 text-xs italic mb-2 sm:mb-3 shrink-0">Hãy để cảm xúc chảy ra như nó vốn có.
+                        Chỉ cần
                         thật.</p>
                     <textarea
                         class="flex-1 w-full bg-black/40 border border-white/10 rounded-xl p-3 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-orange-500/50 transition-colors resize-none text-sm"
@@ -516,8 +521,8 @@
 
                 <!-- CỘT 2: Nguyên nhân -->
                 <div
-                    class="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-5 overflow-y-auto">
-                    <h3 class="text-slate-300 font-medium mb-3 flex items-center gap-2 text-sm shrink-0">
+                    class="flex-none h-auto md:flex-1 flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 sm:p-5">
+                    <h3 class="text-slate-300 font-medium mb-2 sm:mb-3 flex items-center gap-2 text-sm shrink-0">
                         <i data-lucide="help-circle" class="w-4 h-4"></i> Nguyên nhân
                     </h3>
                     <div class="flex flex-col gap-2">
@@ -560,13 +565,13 @@
                 </div>
 
                 <!-- CỘT 3: Hoạt động + Nút đốt -->
-                <div class="flex-1 flex flex-col gap-4">
+                <div class="flex-none md:flex-1 flex flex-col gap-4">
                     <div
-                        class="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-5 overflow-y-auto">
+                        class="flex-none h-auto md:flex-1 flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 sm:p-5">
                         <h3 class="text-slate-300 font-medium mb-1 flex items-center gap-2 text-sm shrink-0">
                             <i data-lucide="heart" class="w-4 h-4"></i> Hoạt động thư giãn
                         </h3>
-                        <p class="text-slate-500 text-xs mb-3 italic shrink-0">Tick những gì bạn muốn làm:</p>
+                        <p class="text-slate-500 text-xs mb-2 sm:mb-3 italic shrink-0">Tick những gì bạn muốn làm:</p>
                         <div class="flex flex-col gap-2">
                             <label
                                 class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-colors border border-transparent hover:border-indigo-500/30">
@@ -602,9 +607,9 @@
                     </div>
 
                     <!-- Nút đốt -->
-                    <div class="shrink-0">
+                    <div class="shrink-0 pb-4 md:pb-0">
                         <button id="burnBtn" onclick="burnDiary()"
-                            class="w-full py-4 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-2xl shadow-xl shadow-orange-600/20 transition-all flex items-center justify-center gap-2 group">
+                            class="w-full py-3 sm:py-4 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-2xl shadow-xl shadow-orange-600/20 transition-all flex items-center justify-center gap-2 group text-sm sm:text-base">
                             <i data-lucide="flame" class="w-5 h-5 group-hover:animate-pulse"></i> ĐÓNG GÓI & ĐỐT CHÁY
                         </button>
                         <p class="text-center text-slate-500 text-xs italic mt-2">🕯 Viết xong → đốt sạch áp lực.</p>
@@ -620,18 +625,18 @@
 
 
     <!-- MODAL (FEEL BETTER) -->
-    <div class="modal hidden fixed inset-0 z-[100] flex items-center justify-center p-6" id="modal">
+    <div class="modal hidden fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" id="modal">
         <div class="absolute inset-0 bg-black/20" onclick="closeModal()"></div>
         <div
-            class="relative glass-modal p-8 rounded-3xl text-center max-w-xs w-full shadow-2xl transform transition-all">
+            class="relative glass-modal p-6 sm:p-8 rounded-3xl text-center max-w-[18rem] sm:max-w-xs w-full shadow-2xl transform transition-all">
             <div
-                class="w-12 h-12 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i data-lucide="sparkles" class="w-6 h-6"></i>
+                class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <i data-lucide="sparkles" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             </div>
-            <h2 class="text-xl font-bold text-white mb-2 tracking-tight">Cố Lên Nhé!</h2>
-            <p id="encouragementText" class="text-slate-200 text-sm leading-relaxed mb-6"></p>
+            <h2 class="text-lg sm:text-xl font-bold text-white mb-2 tracking-tight">Cố Lên Nhé!</h2>
+            <p id="encouragementText" class="text-slate-200 text-xs sm:text-sm leading-relaxed mb-5 sm:mb-6"></p>
             <button
-                class="w-full py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded-xl border border-white/10 transition-all"
+                class="w-full py-2.5 sm:py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded-xl border border-white/10 transition-all"
                 onclick="closeModal()">Tiếp tục thôi</button>
         </div>
     </div>
@@ -661,6 +666,7 @@
         let scrollListenersSetup = false;
         let startY = 0;
         let endY = 0;
+        let isScrolling = false;
         let currentVolume = 0.7;
         let isMuted = false;
 
@@ -930,6 +936,13 @@
             const currentEl = document.getElementById('currentVideo');
             if (currentEl) currentEl.textContent = currentVideoIndex + 1;
 
+            // Reset like button for the new video
+            const likeBtn = document.getElementById('likeBtn');
+            if (likeBtn) {
+                const icon = likeBtn.querySelector('svg') || likeBtn.querySelector('i');
+                if (icon) icon.classList.remove('active');
+            }
+
             // Render the 3-item window (new items placed without transition)
             renderWindow(currentVideoIndex);
 
@@ -938,26 +951,28 @@
 
             // rAF ensures new items are painted at their initial position before we animate
             requestAnimationFrame(() => {
-                container.querySelectorAll('.video-item').forEach(item => {
-                    const idx = parseInt(item.dataset.index, 10);
-                    const offset = getRelOffset(idx, currentVideoIndex);
+                requestAnimationFrame(() => {
+                    container.querySelectorAll('.video-item').forEach(item => {
+                        const idx = parseInt(item.dataset.index, 10);
+                        const offset = getRelOffset(idx, currentVideoIndex);
 
-                    // Slide all items to their new position
-                    item.style.transition = 'transform 0.32s cubic-bezier(0.4, 0, 0.2, 1)';
-                    item.style.transform = 'translateY(' + (offset * 100) + '%)';
+                        // Slide all items to their new position with a smoother spring-like curve
+                        item.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
+                        item.style.transform = 'translateY(' + (offset * 100) + '%)';
 
-                    const video = item.querySelector('video');
-                    if (!video) return;
+                        const video = item.querySelector('video');
+                        if (!video) return;
 
-                    if (idx === currentVideoIndex) {
-                        video.preload = 'auto';
-                        video.currentTime = 0;
-                        video.volume = isMuted ? 0 : currentVolume;
-                        video.play().catch(() => { });
-                    } else {
-                        video.pause();
-                        video.preload = 'metadata';
-                    }
+                        if (idx === currentVideoIndex) {
+                            video.preload = 'auto';
+                            video.currentTime = 0;
+                            video.volume = isMuted ? 0 : currentVolume;
+                            video.play().catch(() => { });
+                        } else {
+                            video.pause();
+                            video.preload = 'metadata';
+                        }
+                    });
                 });
             });
         }
@@ -1145,28 +1160,44 @@
 
             document.addEventListener('touchend', (e) => {
                 if (!document.getElementById('videoScreen').classList.contains('hidden')) {
+                    if (isScrolling) return;
                     endY = e.changedTouches[0].clientY;
                     const diff = startY - endY;
                     if (Math.abs(diff) > 50) {
+                        isScrolling = true;
                         if (diff > 0) nextVideo();
                         else prevVideo();
+                        setTimeout(() => { isScrolling = false; }, 450);
                     }
                 }
             }, false);
 
             document.addEventListener('wheel', (e) => {
                 if (!document.getElementById('videoScreen').classList.contains('hidden')) {
-                    if (Math.abs(e.deltaY) > 10) {
+                    if (isScrolling) return;
+                    if (Math.abs(e.deltaY) > 20) {
+                        isScrolling = true;
                         if (e.deltaY > 0) nextVideo();
                         else prevVideo();
+                        setTimeout(() => { isScrolling = false; }, 450);
                     }
                 }
             }, { passive: true });
 
             document.addEventListener('keydown', (e) => {
                 if (!document.getElementById('videoScreen').classList.contains('hidden')) {
-                    if (e.key === 'ArrowUp') prevVideo();
-                    else if (e.key === 'ArrowDown') nextVideo();
+                    if (isScrolling && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) return;
+                    
+                    if (e.key === 'ArrowUp') {
+                        isScrolling = true; 
+                        prevVideo(); 
+                        setTimeout(() => { isScrolling = false; }, 450);
+                    }
+                    else if (e.key === 'ArrowDown') {
+                        isScrolling = true; 
+                        nextVideo(); 
+                        setTimeout(() => { isScrolling = false; }, 450);
+                    }
                     else if (e.key === ' ') {
                         const video = document.querySelectorAll('.video-item')[currentVideoIndex]?.querySelector('video');
                         if (video) video.paused ? video.play() : video.pause();
