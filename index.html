@@ -354,174 +354,160 @@
             <p class="text-slate-400 text-sm sm:text-base">Chọn một tâm trạng để bắt đầu xem video truyền cảm hứng</p>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 px-4 sm:px-6 pb-10 w-full">
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('not_compare', 'Đang so sánh với người giỏi hơn')">
+        <!-- FEATURED: Social-Emotional -->
+        <div class="px-4 sm:px-6 pb-4">
+            <button onclick="selectMood('all', 'Social-Emotional, trộn mọi cảm xúc')"
+                class="w-full group flex items-center gap-4 p-4 rounded-2xl border border-fuchsia-500/30 bg-gradient-to-r from-fuchsia-500/10 via-purple-500/10 to-pink-500/10 hover:from-fuchsia-500/20 hover:to-pink-500/20 hover:border-fuchsia-400/60 transition-all duration-300 text-left">
                 <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                    <i data-lucide="users" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                    class="w-11 h-11 flex items-center justify-center shrink-0 rounded-xl bg-fuchsia-500/20 text-fuchsia-400 group-hover:bg-fuchsia-500 group-hover:text-white transition-colors">
+                    <i data-lucide="shuffle" class="w-5 h-5"></i>
                 </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">So Sánh</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Với người giỏi hơn</div>
+                <div class="flex-1">
+                    <div class="text-white font-bold text-base">✨ Social-Emotional — Trộn tất cả</div>
+                    <div class="text-fuchsia-300/70 text-xs mt-0.5">Như một social media về cảm xúc</div>
                 </div>
+                <i data-lucide="chevron-right"
+                    class="w-4 h-4 text-fuchsia-400/60 group-hover:text-fuchsia-300 transition-colors shrink-0"></i>
             </button>
+        </div>
 
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-rose-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('stress', 'Đang căng thẳng, nên xả stress đầu óc')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-rose-500/10 text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-colors">
-                    <i data-lucide="zap" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Căng Thẳng</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Cần sự bình yên</div>
-                </div>
-            </button>
+        <!-- MOOD GRID -->
+        <div class="px-4 sm:px-6 pb-6">
+            <!-- Section: Cảm xúc tiêu cực -->
+            <div class="text-slate-500 text-[11px] font-semibold uppercase tracking-widest mb-2 px-1">Cảm xúc</div>
+            <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2.5 mb-5">
+                <!-- Căng Thẳng -->
+                <button onclick="selectMood('stress', 'Đang căng thẳng, nên xả stress đầu óc')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-rose-500/70 hover:bg-rose-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-colors">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Căng Thẳng</span>
+                </button>
+                <!-- Buồn Bã -->
+                <button onclick="selectMood('sad', 'Đang cảm thấy buồn, cần sự vui vẻ')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-blue-500/70 hover:bg-blue-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                        <i data-lucide="cloud-rain" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Buồn Bã</span>
+                </button>
+                <!-- Mệt Mỏi -->
+                <button onclick="selectMood('tired', 'Cảm thấy mệt mỏi, cần thư giãn')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/70 hover:bg-emerald-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                        <i data-lucide="battery-low" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Mệt Mỏi</span>
+                </button>
+                <!-- Mông Lung -->
+                <button onclick="selectMood('vague', 'Mông lung, ngẫm lại cuộc đời')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-violet-500/70 hover:bg-violet-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-violet-500/10 text-violet-400 group-hover:bg-violet-500 group-hover:text-white transition-colors">
+                        <i data-lucide="cloud" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Mông Lung</span>
+                </button>
+                <!-- Than Phiền -->
+                <button onclick="selectMood('complain', 'Đang than phiền, cố gắng nỗ lực trong im lặng')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-yellow-500/70 hover:bg-yellow-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
+                        <i data-lucide="message-square" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Than Phiền</span>
+                </button>
+                <!-- So Sánh -->
+                <button onclick="selectMood('not_compare', 'Đang so sánh với người giỏi hơn')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500/70 hover:bg-indigo-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">So Sánh</span>
+                </button>
+            </div>
 
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-blue-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('sad', 'Đang cảm thấy buồn, cần sự vui vẻ')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                    <i data-lucide="cloud-rain" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Buồn Bã</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Tìm kiếm niềm vui</div>
-                </div>
-            </button>
+            <!-- Section: Tư duy & Tập trung -->
+            <div class="text-slate-500 text-[11px] font-semibold uppercase tracking-widest mb-2 px-1">Tư duy & Tập trung
+            </div>
+            <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2.5 mb-5">
+                <!-- Mất Động Lực -->
+                <button onclick="selectMood('demotivated', 'Mất động lực, không muốn làm gì')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-400/70 hover:bg-slate-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-500/10 text-slate-400 group-hover:bg-slate-400 group-hover:text-white transition-colors">
+                        <i data-lucide="trending-down" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Mất Động Lực</span>
+                </button>
+                <!-- Mất Tập Trung -->
+                <button onclick="selectMood('distraction', 'Mất tập trung, cần sự chú tâm')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/70 hover:bg-cyan-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                        <i data-lucide="target" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Mất Tập Trung</span>
+                </button>
+                <!-- Overthinking -->
+                <button onclick="selectMood('overthinking', 'Overthinking, suy nghĩ quá nhiều')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-purple-500/70 hover:bg-purple-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                        <i data-lucide="cloud-lightning" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Overthinking</span>
+                </button>
+                <!-- Mindset -->
+                <button onclick="selectMood('mindset', 'Nâng cấp tư duy, mở rộng góc nhìn')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-teal-500/70 hover:bg-teal-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-teal-500/10 text-teal-400 group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                        <i data-lucide="brain" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Mindset</span>
+                </button>
+            </div>
 
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('tired', 'Cảm thấy mệt mỏi, cần thư giãn')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-                    <i data-lucide="battery-low" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Mệt Mỏi</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Nạp lại năng lượng</div>
-                </div>
-            </button>
-
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('distraction', 'Mất tập trung, cần sự chú tâm')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
-                    <i data-lucide="target" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Mất Tập Trung</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Tìm lại sự chú tâm</div>
-                </div>
-            </button>
-
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-400 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('demotivated', 'Mất động lực, không muốn làm gì')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-slate-500/10 text-slate-400 group-hover:bg-slate-400 group-hover:text-white transition-colors">
-                    <i data-lucide="trending-down" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Mất Động Lực</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Tiếp thêm chút lửa</div>
-                </div>
-            </button>
-
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-teal-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('mindset', 'Nâng cấp tư duy, mở rộng góc nhìn')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-teal-500/10 text-teal-400 group-hover:bg-teal-500 group-hover:text-white transition-colors">
-                    <i data-lucide="brain" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Mindset</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Góc nhìn & Tư duy</div>
-                </div>
-            </button>
-
-            <!-- 
-                ================================================================
-                HƯỚNG DẪN THÊM NÚT CẢM XÚC MỚI (UI):
-                1. Copy đoạn <button>...</button> bên dưới.
-                2. Thay đổi selectMood('tên_mood', 'Tiêu đề hiển thị').
-                3. Thay đổi Icon (data-lucide) và Màu sắc (hover:border-...)
-                ================================================================
-            -->
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('mildly_bored', 'Chán nhẹ, cần giải trí')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-amber-500/10 text-amber-400 group-hover:bg-amber-500 group-hover:text-white transition-colors">
-                    <i data-lucide="coffee" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Chán Nhẹ</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Tìm chút cảm hứng</div>
-                </div>
-            </button>
-
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-yellow-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('complain', 'Đang than phiền, cố gắng nỗ lực trong im lặng')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-yellow-500/10 text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
-                    <i data-lucide="message-square" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Than Phiền</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Đừng than phiền, hãy hành động</div>
-                </div>
-            </button>
-
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-violet-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('vague', 'Mông lung, ngẫm lại cuộc đời')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-violet-500/10 text-violet-400 group-hover:bg-violet-500 group-hover:text-white transition-colors">
-                    <i data-lucide="cloud" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Mông Lung</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Không biết mình cảm thấy gì</div>
-                </div>
-            </button>
-
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-fuchsia-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('all', 'Tùm lum, trộn mọi cảm xúc')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-fuchsia-500/10 text-fuchsia-400 group-hover:bg-fuchsia-500 group-hover:text-white transition-colors">
-                    <i data-lucide="shuffle" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Tùm Lum</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Trộn ngẫu nhiên tất cả video</div>
-                </div>
-            </button>
-
-            <button
-                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-orange-500 hover:bg-slate-800/50 text-left"
-                onclick="selectMood('burnout', 'Burnout Diary')">
-                <div
-                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-orange-500/10 text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                    <i data-lucide="flame" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                </div>
-                <div>
-                    <div class="text-white font-semibold text-base sm:text-lg">Burnout</div>
-                    <div class="text-slate-500 text-xs sm:text-sm">Đốt cháy áp lực</div>
-                </div>
-            </button>
+            <!-- Section: Đặc biệt -->
+            <div class="text-slate-500 text-[11px] font-semibold uppercase tracking-widest mb-2 px-1">Đặc biệt</div>
+            <div class="grid grid-cols-2 gap-2.5">
+                <!-- Burnout Diary -->
+                <button onclick="selectMood('burnout', 'Burnout Diary')"
+                    class="mood-card group flex items-center gap-3 p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-orange-500/70 hover:bg-orange-500/5 transition-all duration-200 text-left">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center shrink-0 rounded-xl bg-orange-500/10 text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                        <i data-lucide="flame" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-white text-sm font-semibold">Burnout</div>
+                        <div class="text-slate-500 text-[11px]">Ghi nhật ký kiệt sức</div>
+                    </div>
+                </button>
+                <!-- Không So Sánh -->
+                <!-- Placeholder if needed; currently "not_compare" is in section 1 -->
+                <button onclick="selectMood('not_compare', 'Đang so sánh với người giỏi hơn')"
+                    class="mood-card group flex items-center gap-3 p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500/70 hover:bg-indigo-500/5 transition-all duration-200 text-left hidden">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center shrink-0 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-white text-sm font-semibold">So Sánh</div>
+                        <div class="text-slate-500 text-[11px]">Với người giỏi hơn</div>
+                    </div>
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- HEADER -->
+
     <div class="header hidden fixed top-0 left-0 right-0 p-4 sm:p-5 flex justify-between items-center z-50 transition-opacity duration-300 pointer-events-none"
         id="header">
         <button onclick="goHome()"
@@ -756,6 +742,7 @@
             'distraction': { icon: 'target', color: 'bg-cyan-500', handle: '@Mood.MatTapTrung', desc: 'Tập trung vào hiện tại, loại bỏ những xao nhãng xung quanh. 🎯 #focus' },
             'demotivated': { icon: 'trending-down', color: 'bg-slate-500', handle: '@Mood.MatDongLuc', desc: 'Chút động lực nhỏ bé cũng có thể nhóm lên ngọn lửa lớn. Tiến lên nào! 💪 #motivation' },
             'mindset': { icon: 'brain', color: 'bg-teal-500', handle: '@Mood.Mindset', desc: 'Nâng cấp tư duy, thay đổi góc nhìn. Khai phá tiềm năng của bạn! 🧠 #mindset' },
+            'overthinking': { icon: 'cloud-lightning', color: 'bg-purple-500', handle: '@Mood.Overthinking', desc: 'Dừng lại những suy nghĩ vẩn vơ, để tâm trí bạn được yên bình. 🧘‍♂️ #overthinking' },
             'mildly_bored': { icon: 'coffee', color: 'bg-amber-500', handle: '@Mood.ChanNhe', desc: 'Một chút cảm hứng cho ngày dài chán nản. Thử tìm điều mới mẻ xem sao! ☕ #inspire' },
             'complain': { icon: 'message-square', color: 'bg-yellow-500', handle: '@Mood.ThanPhien', desc: 'Khi mọi thứ không như ý, đừng than vãn hay kêu ca, hãy kiên trì làm cho xong việc của mình. 💬 #keepgoing' },
             'vague': { icon: 'cloud', color: 'bg-violet-500', handle: '@Mood.MongLung', desc: 'Đôi khi không biết mình muốn gì cũng là một trải nghiệm. Cứ đi rồi sẽ đến. ☁️ #journey' },
@@ -902,6 +889,22 @@
                 'video/mindset/7612620872259521800.mp4',
                 'video/mindset/7333920839944932610.mp4'
             ],
+            'overthinking': [
+                'video/overthinking/1345498480756902.mp4',
+                'video/overthinking/7191704266560556290.mp4',
+                'video/overthinking/7232355799274687771.mp4',
+                'video/overthinking/7270516656747728134.mp4',
+                'video/overthinking/7447840449114443026.mp4',
+                'video/overthinking/7458248640549670151.mp4',
+                'video/overthinking/7509106782246096146.mp4',
+                'video/overthinking/7524928822915894541.mp4',
+                'video/overthinking/7587310570026634503.mp4',
+                'video/overthinking/7598415854035897618.mp4',
+                'video/overthinking/7608611511132638472.mp4',
+                'video/overthinking/7613729029060906258.mp4',
+                'video/overthinking/7627712945245457681.mp4',
+                'video/overthinking/7629360895189257480.mp4'
+            ],
             'tired': [
                 // --- THÊM VIDEO MỆT MỎI VÀO ĐÂY ---
                 'video/tired/7248631577205361925.mp4',
@@ -926,9 +929,8 @@
                 'video/tired/7634220633261411605.mp4',
                 'video/tired/7589970568074530069.mp4',
                 'video/tired/7592163057321757968.mp4',
-                'video/tired/7630071632370961682.mp4'
-            ],
-            'mildly_bored': [
+                'video/tired/7630071632370961682.mp4',
+                // --- GỘP CHÁN NHẸ VÀO ĐÂY ---
                 'video/mildly_bored/10_7629712428754029845.mp4',
                 'video/mildly_bored/1_7621891132552727829.mp4',
                 'video/mildly_bored/2_7593563750360222983.mp4',
