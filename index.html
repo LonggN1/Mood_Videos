@@ -407,6 +407,32 @@
                 </div>
             </button>
 
+            <button
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('distraction', 'Mất tập trung, cần sự chú tâm')">
+                <div
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                    <i data-lucide="target" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Mất Tập Trung</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Tìm lại sự chú tâm</div>
+                </div>
+            </button>
+
+            <button
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-400 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('demotivated', 'Mất động lực, không muốn làm gì')">
+                <div
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-slate-500/10 text-slate-400 group-hover:bg-slate-400 group-hover:text-white transition-colors">
+                    <i data-lucide="trending-down" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Mất Động Lực</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Tiếp thêm chút lửa</div>
+                </div>
+            </button>
+
             <!-- 
                 ================================================================
                 HƯỚNG DẪN THÊM NÚT CẢM XÚC MỚI (UI):
@@ -714,6 +740,8 @@
             'stress': { icon: 'zap', color: 'bg-rose-500', handle: '@Mood.CangThang', desc: 'Hít một hơi thật sâu, mọi thứ rồi sẽ ổn thôi. Nghỉ ngơi một chút nhé. 🍃 #relax' },
             'sad': { icon: 'cloud-rain', color: 'bg-blue-500', handle: '@Mood.BuonBa', desc: 'Khóc một chút cũng không sao, ngày mai trời lại sáng. 🌧️ #healing' },
             'tired': { icon: 'battery-low', color: 'bg-emerald-500', handle: '@Mood.MetMoi', desc: 'Cơ thể bạn cần được sạc lại. Hãy thả lỏng và tận hưởng chút bình yên. 🔋 #chill' },
+            'distraction': { icon: 'target', color: 'bg-cyan-500', handle: '@Mood.MatTapTrung', desc: 'Tập trung vào hiện tại, loại bỏ những xao nhãng xung quanh. 🎯 #focus' },
+            'demotivated': { icon: 'trending-down', color: 'bg-slate-500', handle: '@Mood.MatDongLuc', desc: 'Chút động lực nhỏ bé cũng có thể nhóm lên ngọn lửa lớn. Tiến lên nào! 💪 #motivation' },
             'mildly_bored': { icon: 'coffee', color: 'bg-amber-500', handle: '@Mood.ChanNhe', desc: 'Một chút cảm hứng cho ngày dài chán nản. Thử tìm điều mới mẻ xem sao! ☕ #inspire' },
             'complain': { icon: 'message-square', color: 'bg-yellow-500', handle: '@Mood.ThanPhien', desc: 'Khi mọi thứ không như ý, đừng than vãn hay kêu ca, hãy kiên trì làm cho xong việc của mình. 💬 #keepgoing' },
             'vague': { icon: 'cloud', color: 'bg-violet-500', handle: '@Mood.MongLung', desc: 'Đôi khi không biết mình muốn gì cũng là một trải nghiệm. Cứ đi rồi sẽ đến. ☁️ #journey' },
@@ -797,7 +825,42 @@
                 'video/sad/7620666730402155784.mp4',
                 'video/sad/7622697611891363079.mp4',
                 'video/sad/7631193359385758994.mp4',
-                'video/sad/7631247286944714004.mp4'
+                'video/sad/7631247286944714004.mp4',
+                'video/sad/7521713530194627848.mp4'
+            ],
+            'distraction': [
+                'video/distraction/7193671299040955675.mp4',
+                'video/distraction/7202207513234705691.mp4',
+                'video/distraction/7246396306795629830.mp4',
+                'video/distraction/7312445082106367233.mp4',
+                'video/distraction/7526575949110906130.mp4',
+                'video/distraction/7547556116616531218.mp4',
+                'video/distraction/7573680268830051602.mp4',
+                'video/distraction/7584241871430520084.mp4',
+                'video/distraction/7629689150555442452.mp4',
+                'video/distraction/7632553500504837396.mp4'
+            ],
+            'demotivated': [
+                'video/demotivated/7233402366781934854.mp4',
+                'video/demotivated/7296111187425578248.mp4',
+                'video/demotivated/7299786163437473025.mp4',
+                'video/demotivated/7330447959894560008.mp4',
+                'video/demotivated/7483086715742080263.mp4',
+                'video/demotivated/7513264761396661522.mp4',
+                'video/demotivated/7568155245201706261.mp4',
+                'video/demotivated/7568878914559315220.mp4',
+                'video/demotivated/7569973070673333511.mp4',
+                'video/demotivated/7570768359617203464.mp4',
+                'video/demotivated/7572228818971168018.mp4',
+                'video/demotivated/7572511303701679381.mp4',
+                'video/demotivated/7590410601176878356.mp4',
+                'video/demotivated/7590778267255196946.mp4',
+                'video/demotivated/7592613593389075732.mp4',
+                'video/demotivated/7595925451185343762.mp4',
+                'video/demotivated/7602439996116864276.mp4',
+                'video/demotivated/7625944100163964178.mp4',
+                'video/demotivated/7633407928636050696.mp4',
+                'video/demotivated/7587285668171140373.mp4'
             ],
             'tired': [
                 // --- THÊM VIDEO MỆT MỎI VÀO ĐÂY ---
