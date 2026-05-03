@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 
 <head>
@@ -61,12 +61,12 @@
 
         @keyframes floatUp {
             0% {
-                transform: translateY(0) scale(1);
+                transform: translate(-50%, -50%) translateY(0) scale(1);
                 opacity: 1;
             }
 
             100% {
-                transform: translateY(-100px) scale(0.5);
+                transform: translate(-50%, -50%) translateY(-160px) scale(0.6);
                 opacity: 0;
             }
         }
@@ -84,9 +84,10 @@
         .floating-heart {
             position: absolute;
             pointer-events: none;
-            animation: floatUp 1s ease-out forwards;
+            animation: floatUp 0.8s ease-out forwards;
             color: #f43f5e;
             z-index: 100;
+            will-change: transform, opacity;
         }
 
         /* Target the SVG inside Lucide icons */
@@ -1276,6 +1277,14 @@
                 videoEl.addEventListener('timeupdate', () => updateProgressUI(item));
                 videoEl.addEventListener('loadedmetadata', () => updateProgressUI(item));
 
+                // Sync Media Session state
+                videoEl.addEventListener('play', () => {
+                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+                });
+                videoEl.addEventListener('pause', () => {
+                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+                });
+
                 // Loading events
                 videoEl.addEventListener('waiting', () => { loadingOverlay.style.opacity = '1'; });
                 videoEl.addEventListener('playing', () => {
@@ -1347,6 +1356,7 @@
                             video.currentTime = 0;
                             video.volume = isMuted ? 0 : currentVolume;
                             video.play().catch(() => { });
+                            updateMediaSession(currentVideoIndex);
                         } else {
                             video.pause();
                             video.preload = 'metadata';
@@ -1358,6 +1368,42 @@
 
         function nextVideo() { showVideo(currentVideoIndex + 1); }
         function prevVideo() { showVideo(currentVideoIndex - 1); }
+
+        function updateMediaSession(index) {
+            if (!('mediaSession' in navigator) || !videos[index]) return;
+
+            const videoPath = videos[index];
+            let activeMood = currentMood;
+            if (currentMood === 'all') {
+                const parts = videoPath.split('/');
+                if (parts.length > 1) activeMood = parts[1];
+            }
+            const config = moodConfig[activeMood] || moodConfig['all'] || { handle: '@Mood', desc: 'Mood Video' };
+
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: config.desc.split('#')[0].trim() || 'Mood Video',
+                artist: config.handle,
+                album: 'Mood Videos',
+                artwork: [
+                    { src: 'dial_icon.ico', sizes: '192x192', type: 'image/x-icon' },
+                    { src: 'dial_icon.ico', sizes: '512x512', type: 'image/x-icon' }
+                ]
+            });
+
+            // Handlers for lock screen controls
+            navigator.mediaSession.setActionHandler('play', () => {
+                const item = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
+                const video = item?.querySelector('video');
+                if (video) video.play();
+            });
+            navigator.mediaSession.setActionHandler('pause', () => {
+                const item = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
+                const video = item?.querySelector('video');
+                if (video) video.pause();
+            });
+            navigator.mediaSession.setActionHandler('previoustrack', () => prevVideo());
+            navigator.mediaSession.setActionHandler('nexttrack', () => nextVideo());
+        }
 
         function updateProgressUI(item) {
             const idx = parseInt(item.dataset.index, 10);
@@ -1539,7 +1585,7 @@
                 startY = rect.top;
             }
 
-            const heartSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+            const heartSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
 
             // Reduced to 2 hearts per hit for higher spam density support
             for (let i = 0; i < 2; i++) {
@@ -1552,9 +1598,9 @@
                 heart.style.left = (startX + offsetX) + 'px';
                 heart.style.top = (startY + offsetY) + 'px';
 
-                const scale = 0.6 + Math.random() * 0.8;
+                const scale = 0.8 + Math.random() * 1.5;
                 const rotate = (Math.random() - 0.5) * 60;
-                heart.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+                heart.style.transform = `translate(-50%, -50%) scale(${scale}) rotate(${rotate}deg)`;
 
                 document.body.appendChild(heart);
 
@@ -1642,7 +1688,8 @@
                     if (isScrolling) return;
                     endY = e.changedTouches[0].clientY;
                     const diff = startY - endY;
-                    if (Math.abs(diff) > 50) {
+                    // Tăng ngưỡng vuốt từ 50 lên 120 để tránh quẹt nhầm
+                    if (Math.abs(diff) > 120) {
                         isScrolling = true;
                         if (diff > 0) nextVideo();
                         else prevVideo();
