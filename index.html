@@ -433,6 +433,19 @@
                 </div>
             </button>
 
+            <button
+                class="mood-card group flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-teal-500 hover:bg-slate-800/50 text-left"
+                onclick="selectMood('mindset', 'Nâng cấp tư duy, mở rộng góc nhìn')">
+                <div
+                    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 rounded-xl bg-teal-500/10 text-teal-400 group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                    <i data-lucide="brain" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                </div>
+                <div>
+                    <div class="text-white font-semibold text-base sm:text-lg">Mindset</div>
+                    <div class="text-slate-500 text-xs sm:text-sm">Góc nhìn & Tư duy</div>
+                </div>
+            </button>
+
             <!-- 
                 ================================================================
                 HƯỚNG DẪN THÊM NÚT CẢM XÚC MỚI (UI):
@@ -742,6 +755,7 @@
             'tired': { icon: 'battery-low', color: 'bg-emerald-500', handle: '@Mood.MetMoi', desc: 'Cơ thể bạn cần được sạc lại. Hãy thả lỏng và tận hưởng chút bình yên. 🔋 #chill' },
             'distraction': { icon: 'target', color: 'bg-cyan-500', handle: '@Mood.MatTapTrung', desc: 'Tập trung vào hiện tại, loại bỏ những xao nhãng xung quanh. 🎯 #focus' },
             'demotivated': { icon: 'trending-down', color: 'bg-slate-500', handle: '@Mood.MatDongLuc', desc: 'Chút động lực nhỏ bé cũng có thể nhóm lên ngọn lửa lớn. Tiến lên nào! 💪 #motivation' },
+            'mindset': { icon: 'brain', color: 'bg-teal-500', handle: '@Mood.Mindset', desc: 'Nâng cấp tư duy, thay đổi góc nhìn. Khai phá tiềm năng của bạn! 🧠 #mindset' },
             'mildly_bored': { icon: 'coffee', color: 'bg-amber-500', handle: '@Mood.ChanNhe', desc: 'Một chút cảm hứng cho ngày dài chán nản. Thử tìm điều mới mẻ xem sao! ☕ #inspire' },
             'complain': { icon: 'message-square', color: 'bg-yellow-500', handle: '@Mood.ThanPhien', desc: 'Khi mọi thứ không như ý, đừng than vãn hay kêu ca, hãy kiên trì làm cho xong việc của mình. 💬 #keepgoing' },
             'vague': { icon: 'cloud', color: 'bg-violet-500', handle: '@Mood.MongLung', desc: 'Đôi khi không biết mình muốn gì cũng là một trải nghiệm. Cứ đi rồi sẽ đến. ☁️ #journey' },
@@ -826,7 +840,8 @@
                 'video/sad/7622697611891363079.mp4',
                 'video/sad/7631193359385758994.mp4',
                 'video/sad/7631247286944714004.mp4',
-                'video/sad/7521713530194627848.mp4'
+                'video/sad/7521713530194627848.mp4',
+                'video/sad/7617331768185670919.mp4'
             ],
             'distraction': [
                 'video/distraction/7193671299040955675.mp4',
@@ -860,7 +875,32 @@
                 'video/demotivated/7602439996116864276.mp4',
                 'video/demotivated/7625944100163964178.mp4',
                 'video/demotivated/7633407928636050696.mp4',
-                'video/demotivated/7587285668171140373.mp4'
+                'video/demotivated/7587285668171140373.mp4',
+                'video/demotivated/7624526904300719381.mp4',
+                'video/demotivated/7633464766974971144.mp4'
+            ],
+            'mindset': [
+                'video/mindset/7456358107262831879.mp4',
+                'video/mindset/7467781412284828935.mp4',
+                'video/mindset/7563956668506164494.mp4',
+                'video/mindset/7606968036758654228.mp4',
+                'video/mindset/7610055842930380052.mp4',
+                'video/mindset/7610064209828695316.mp4',
+                'video/mindset/7611476048340897031.mp4',
+                'video/mindset/7614822128197586197.mp4',
+                'video/mindset/7614870847479631111.mp4',
+                'video/mindset/7615816303479213332.mp4',
+                'video/mindset/7621820923930299664.mp4',
+                'video/mindset/7629930933520518407.mp4',
+                'video/mindset/7632685541204512018.mp4',
+                'video/mindset/7633626385310862599.mp4',
+                'video/mindset/7634130582984838417.mp4',
+                'video/mindset/7634368831422598418.mp4',
+                'video/mindset/7634531400728759572.mp4',
+                'video/mindset/7634847051099966727.mp4',
+                'video/mindset/7568874441136950546.mp4',
+                'video/mindset/7612620872259521800.mp4',
+                'video/mindset/7333920839944932610.mp4'
             ],
             'tired': [
                 // --- THÊM VIDEO MỆT MỎI VÀO ĐÂY ---
@@ -870,6 +910,23 @@
                 'video/tired/7288195084091149570.mp4',
                 'video/tired/7359550287733902593.mp4',
                 'video/tired/7472806835838307591.mp4',
+                'video/tired/7606019253480852757.mp4',
+                'video/tired/7616361102183501076.mp4',
+                'video/tired/7632542898449354005.mp4',
+                'video/tired/7633680508492221717.mp4',
+                'video/tired/7633789454947306772.mp4',
+                'video/tired/7634401870366231829.mp4',
+                'video/tired/7635226015790402837.mp4',
+                'video/tired/7592567615575428370.mp4',
+                'video/tired/7632634495702797575.mp4',
+                'video/tired/7630444527550991624.mp4',
+                'video/tired/7610753584677817620.mp4',
+                'video/tired/7635523598878330132.mp4',
+                'video/tired/7635625183507762439.mp4',
+                'video/tired/7634220633261411605.mp4',
+                'video/tired/7589970568074530069.mp4',
+                'video/tired/7592163057321757968.mp4',
+                'video/tired/7630071632370961682.mp4'
             ],
             'mildly_bored': [
                 'video/mildly_bored/10_7629712428754029845.mp4',
