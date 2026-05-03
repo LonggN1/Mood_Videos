@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 
 <head>
@@ -430,6 +430,15 @@
                     </div>
                     <span class="text-white text-[11px] font-medium leading-tight">So Sánh</span>
                 </button>
+                <!-- Tức Giận -->
+                <button onclick="selectMood('angry', 'Đang tức giận, cần bình tĩnh lại')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-500/70 hover:bg-slate-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-500/10 text-slate-400 group-hover:bg-slate-500 group-hover:text-white transition-colors">
+                        <i data-lucide="angry" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Tức Giận</span>
+                </button>
             </div>
 
             <!-- Section: Tư duy & Tập trung -->
@@ -471,6 +480,15 @@
                         <i data-lucide="brain" class="w-5 h-5"></i>
                     </div>
                     <span class="text-white text-[11px] font-medium leading-tight">Mindset</span>
+                </button>
+                <!-- Chán Nhẹ -->
+                <button onclick="selectMood('mildly_bored', 'Chán nhẹ, cần giải trí')"
+                    class="mood-card group flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-500/70 hover:bg-amber-500/5 transition-all duration-200 text-center">
+                    <div
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                        <i data-lucide="coffee" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-white text-[11px] font-medium leading-tight">Chán Nhẹ</span>
                 </button>
             </div>
 
@@ -747,6 +765,7 @@
             'mildly_bored': { icon: 'coffee', color: 'bg-amber-500', handle: '@Mood.ChanNhe', desc: 'Một chút cảm hứng cho ngày dài chán nản. Thử tìm điều mới mẻ xem sao! ☕ #inspire' },
             'complain': { icon: 'message-square', color: 'bg-yellow-500', handle: '@Mood.ThanPhien', desc: 'Khi mọi thứ không như ý, đừng than vãn hay kêu ca, hãy kiên trì làm cho xong việc của mình. 💬 #keepgoing' },
             'vague': { icon: 'cloud', color: 'bg-violet-500', handle: '@Mood.MongLung', desc: 'Đôi khi không biết mình muốn gì cũng là một trải nghiệm. Cứ đi rồi sẽ đến. ☁️ #journey' },
+            'angry': { icon: 'angry', color: 'bg-slate-500', handle: '@Mood.TucGian', desc: 'Hít thở sâu, để cơn giận trôi qua. Sự bình tĩnh là sức mạnh. 😤 #calm' },
             'burnout': { icon: 'flame', color: 'bg-orange-500', handle: '@Mood.Burnout', desc: 'Đốt cháy hết những áp lực bủa vây. 🔥 #burnout' },
             'all': { icon: 'shuffle', color: 'bg-fuchsia-500', handle: '@Mood.TumLum', desc: 'Đầy rẫy những bất ngờ. Khám phá những video ngẫu nhiên nào! 🎭 #random' }
         };
@@ -943,7 +962,10 @@
                 'video/tired/7589970568074530069.mp4',
                 'video/tired/7592163057321757968.mp4',
                 'video/tired/7630071632370961682.mp4',
-                // --- GỘP CHÁN NHẸ VÀO ĐÂY ---
+                'video/tired/7574372383612554503.mp4',
+                'video/tired/7243339572392774917.mp4'
+            ],
+            'mildly_bored': [
                 'video/mildly_bored/10_7629712428754029845.mp4',
                 'video/mildly_bored/1_7621891132552727829.mp4',
                 'video/mildly_bored/2_7593563750360222983.mp4',
@@ -954,6 +976,25 @@
                 'video/mildly_bored/7_7632506138671484180.mp4',
                 'video/mildly_bored/8_7631156841279474965.mp4',
                 'video/mildly_bored/9_7630290998895529237.mp4'
+            ],
+            'angry': [
+                'video/angry/6909360431555497217.mp4',
+                'video/angry/7221411298406403354.mp4',
+                'video/angry/7229900430682115334.mp4',
+                'video/angry/7286833900486167826.mp4',
+                'video/angry/7296147443299765505.mp4',
+                'video/angry/7349917403788184839.mp4',
+                'video/angry/7386286690513571089.mp4',
+                'video/angry/7424585995502374152.mp4',
+                'video/angry/7456792286077242642.mp4',
+                'video/angry/7487599143045696773.mp4',
+                'video/angry/7508988982328331521.mp4',
+                'video/angry/7574042123616537874.mp4',
+                'video/angry/7575510351903558934.mp4',
+                'video/angry/7609551896180722964.mp4',
+                'video/angry/7610798481673817364.mp4',
+                'video/angry/7621405441934822677.mp4',
+                'video/angry/7633030957871746311.mp4'
             ],
             /*
             'TEN_MOOD_MOI': [
@@ -1700,7 +1741,7 @@
                 let currentLikes = parseInt(btn.dataset.rawLikes) || 0;
                 currentLikes++;
                 btn.dataset.rawLikes = currentLikes;
-                
+
                 const path = videoPath || (videos && videos[currentVideoIndex]);
                 if (path) {
                     localStorage.setItem('like_' + path, currentLikes);
