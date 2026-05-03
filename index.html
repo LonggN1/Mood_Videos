@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mood Videos - Cảm Giác Của Bạn</title>
+    
+    <!-- PWA Setup -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#020617">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mood Videos">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -475,20 +483,20 @@
                 </div>
 
                 <button
-                    class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-slate-700 sm:border-white/20 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl shadow-black/50"
+                    class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-slate-600 sm:border-white/20 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-[0_4px_15px_rgba(0,0,0,0.8)]"
                     id="volumeBtn" onclick="toggleVolumeSlider()">
                     <i data-lucide="volume-2" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </button>
             </div>
 
             <button
-                class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-slate-700 sm:border-white/20 text-rose-500 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl shadow-black/50 sm:shadow-rose-500/20"
+                class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-rose-500/30 sm:border-white/20 text-rose-500 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-[0_0_15px_rgba(244,63,94,0.4)] sm:shadow-[0_0_20px_rgba(244,63,94,0.2)]"
                 id="likeBtn" title="Thả tim" onclick="likeVideo(this)">
                 <i data-lucide="heart" class="w-5 h-5 sm:w-6 sm:h-6 fill-transparent transition-colors"></i>
             </button>
 
             <button
-                class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-slate-700 sm:border-white/20 text-indigo-400 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl shadow-black/50 sm:shadow-indigo-500/20"
+                class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-slate-800 sm:bg-white/10 backdrop-blur-md border border-indigo-500/30 sm:border-white/20 text-indigo-400 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-[0_0_15px_rgba(99,102,241,0.4)] sm:shadow-[0_0_20px_rgba(99,102,241,0.2)]"
                 title="Lời chúc" onclick="showFeelBetter()">
                 <i data-lucide="message-square" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             </button>
@@ -901,16 +909,27 @@
                 videoEl.className = 'w-full h-full object-contain';
                 videoEl.preload = idx === targetIndex ? 'auto' : 'metadata';
 
+                // Loading Spinner Overlay
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.className = 'absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-10 transition-opacity duration-300 pointer-events-none';
+                loadingOverlay.innerHTML = '<div class="w-12 h-12 border-4 border-white/20 border-t-indigo-500 rounded-full animate-spin shadow-[0_0_15px_rgba(99,102,241,0.5)]"></div>';
+
                 const overlay = document.createElement('div');
                 overlay.className = 'video-controls-overlay absolute bottom-0 left-0 right-0 opacity-0 hover:opacity-100 transition-opacity duration-200 flex flex-col justify-end px-6 pt-10 pb-4 bg-gradient-to-t from-black/70 to-transparent';
                 overlay.innerHTML = '<div class="video-progress w-full h-1 bg-white/20 rounded-full cursor-pointer mb-2 overflow-hidden" onclick="seekVideo(event, ' + idx + ')"><div class="video-progress-bar h-full bg-indigo-400 w-0" style="transition: width 0.1s linear;"></div></div><div class="flex justify-between items-center text-white/60 text-xs font-medium"><span class="current-time">0:00</span><span class="duration">0:00</span></div>';
 
                 item.appendChild(videoEl);
+                item.appendChild(loadingOverlay);
                 item.appendChild(overlay);
                 container.appendChild(item);
 
                 videoEl.addEventListener('timeupdate', () => updateProgressUI(item));
                 videoEl.addEventListener('loadedmetadata', () => updateProgressUI(item));
+                
+                // Loading events
+                videoEl.addEventListener('waiting', () => { loadingOverlay.style.opacity = '1'; });
+                videoEl.addEventListener('playing', () => { loadingOverlay.style.opacity = '0'; });
+                videoEl.addEventListener('canplay', () => { loadingOverlay.style.opacity = '0'; });
             });
         }
 
