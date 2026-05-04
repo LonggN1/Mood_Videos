@@ -731,6 +731,7 @@
         let currentVolume = 0.7;
         let isMuted = false;
         let currentRawLikes = 0;
+        let isUserPaused = false;
 
         // ===== FUNCTIONS =====
         function formatNumber(num) {
@@ -1158,7 +1159,13 @@
                 videoEl.setAttribute('disablePictureInPicture', '');
                 videoEl.dataset.index = idx;
                 videoEl.className = 'w-full h-full object-contain';
-                videoEl.preload = idx === targetIndex ? 'auto' : 'metadata';
+                
+                // Optimized Preload Algorithm:
+                // - Current video: 'auto' (highest priority)
+                // - Next video: 'auto' (high priority to ensure smooth swipe)
+                // - Prev video: 'metadata' (low priority, saved for back swipes)
+                const isNext = idx === (targetIndex + 1) % videos.length;
+                videoEl.preload = (idx === targetIndex || isNext) ? 'auto' : 'metadata';
 
                 // Loading Spinner Overlay
                 const loadingOverlay = document.createElement('div');
@@ -1279,10 +1286,19 @@
 
                 // Sync Media Session state
                 videoEl.addEventListener('play', () => {
-                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+                    if ('mediaSession' in navigator) {
+                        navigator.mediaSession.playbackState = 'playing';
+                    }
                 });
                 videoEl.addEventListener('pause', () => {
-                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+                    if ('mediaSession' in navigator) {
+                        // If it paused but it wasn't the user, and we're hidden, try to resume
+                        if (document.visibilityState === 'hidden' && !isUserPaused) {
+                            videoEl.play().catch(() => {});
+                        } else {
+                            navigator.mediaSession.playbackState = 'paused';
+                        }
+                    }
                 });
 
                 // Loading events
@@ -1291,6 +1307,7 @@
                     loadingOverlay.style.opacity = '0';
                     playOverlay.classList.remove('opacity-100');
                     playOverlay.classList.add('opacity-0');
+                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
                 });
                 videoEl.addEventListener('pause', () => {
                     playOverlay.classList.remove('opacity-0');
@@ -1355,14 +1372,60 @@
                             video.preload = 'auto';
                             video.currentTime = 0;
                             video.volume = isMuted ? 0 : currentVolume;
+                            isUserPaused = false;
+                            
+                            // High-priority play
                             video.play().catch(() => { });
                             updateMediaSession(currentVideoIndex);
+                            
+                            // Once current is playing, ensure the next one is pre-buffering
+                            setTimeout(() => {
+                                preloadNextVideos(currentVideoIndex);
+                            }, 1000);
                         } else {
-                            video.pause();
-                            video.preload = 'metadata';
+                            // If it's the next video, set to auto but don't play
+                            const isNext = idx === (currentVideoIndex + 1) % videos.length;
+                            if (isNext) {
+                                video.preload = 'auto';
+                            } else {
+                                video.pause();
+                                video.preload = 'metadata';
+                            }
                         }
                     });
                 });
+            });
+        }
+
+        // Background caching algorithm for future videos
+        function preloadNextVideos(currentIndex) {
+            // Preload 2 videos ahead to have them ready in browser cache
+            const nextIdx = (currentIndex + 1) % videos.length;
+            const nextNextIdx = (currentIndex + 2) % videos.length;
+            
+            [nextIdx, nextNextIdx].forEach(idx => {
+                const url = videos[idx];
+                if (!url) return;
+                
+                // Check if already in DOM
+                const existing = document.querySelector(`.video-item[data-index="${idx}"] video`);
+                if (existing) {
+                    existing.preload = 'auto';
+                    return;
+                }
+                
+                // If not in DOM, use a lightweight prefetch
+                // We use a temporary hidden video element to trigger browser's internal cache
+                const prefetch = document.createElement('video');
+                prefetch.src = url;
+                prefetch.preload = 'auto';
+                prefetch.muted = true;
+                prefetch.style.display = 'none';
+                // Discard after some time or when it has buffered enough
+                prefetch.addEventListener('canplaythrough', () => {
+                    prefetch.src = '';
+                    prefetch.remove();
+                }, { once: true });
             });
         }
 
@@ -1394,15 +1457,24 @@
             navigator.mediaSession.setActionHandler('play', () => {
                 const item = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
                 const video = item?.querySelector('video');
-                if (video) video.play();
+                if (video) {
+                    isUserPaused = false;
+                    video.play().catch(() => {});
+                }
             });
             navigator.mediaSession.setActionHandler('pause', () => {
                 const item = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
                 const video = item?.querySelector('video');
-                if (video) video.pause();
+                if (video) {
+                    isUserPaused = true;
+                    video.pause();
+                }
             });
-            navigator.mediaSession.setActionHandler('previoustrack', () => prevVideo());
-            navigator.mediaSession.setActionHandler('nexttrack', () => nextVideo());
+            navigator.mediaSession.setActionHandler('previoustrack', () => { isUserPaused = false; prevVideo(); });
+            navigator.mediaSession.setActionHandler('nexttrack', () => { isUserPaused = false; nextVideo(); });
+            
+            // Background Keep-alive: Ensure state is consistent
+            navigator.mediaSession.playbackState = isUserPaused ? 'paused' : 'playing';
         }
 
         function updateProgressUI(item) {
@@ -1445,16 +1517,19 @@
 
                 // Ensure video is playing (in case timeout executed just before this tap)
                 if (video.paused) {
+                    isUserPaused = false;
                     video.play().catch(() => { });
                 }
             } else {
                 // Single tap detected
                 if (video.paused) {
                     // Play immediately to respect Safari user gesture restrictions
+                    isUserPaused = false;
                     video.play().catch(() => { });
                 } else {
                     // Delay pause to allow window for double tap
                     singleTapTimeout = setTimeout(() => {
+                        isUserPaused = true;
                         video.pause();
                     }, 300);
                 }
@@ -1726,7 +1801,15 @@
                     }
                     else if (e.key === ' ') {
                         const video = document.querySelectorAll('.video-item')[currentVideoIndex]?.querySelector('video');
-                        if (video) video.paused ? video.play() : video.pause();
+                        if (video) {
+                            if (video.paused) {
+                                isUserPaused = false;
+                                video.play();
+                            } else {
+                                isUserPaused = true;
+                                video.pause();
+                            }
+                        }
                     }
                 }
             });
@@ -2001,6 +2084,44 @@
 
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
         window.addEventListener('load', () => { if (window.lucide) lucide.createIcons(); });
+
+        // Background Playback Management
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                // When coming back, sync the state
+                const item = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
+                const video = item?.querySelector('video');
+                if (video && !video.paused) {
+                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+                }
+            } else {
+                // When going to background, try to keep playing if not user paused
+                if (!isUserPaused) {
+                    const item = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
+                    const video = item?.querySelector('video');
+                    if (video) {
+                        // Small delay to let the browser process the visibility change
+                        setTimeout(() => {
+                            video.play().catch(() => {
+                                console.log("Background play request failed or was blocked.");
+                            });
+                        }, 50);
+                    }
+                }
+            }
+        });
+
+        // Robust Keep-alive Interval for Mobile
+        setInterval(() => {
+            if (!isUserPaused && !document.getElementById('videoScreen').classList.contains('hidden')) {
+                const item = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
+                const video = item?.querySelector('video');
+                if (video && video.paused && document.visibilityState === 'hidden') {
+                    // Try to resume if it was accidentally paused by the system in background
+                    video.play().catch(() => {});
+                }
+            }
+        }, 2000);
     </script>
 </body>
 
