@@ -1297,13 +1297,33 @@
 
                 if (window.lucide) lucide.createIcons();
 
-                videoEl.addEventListener('timeupdate', () => updateProgressUI(item));
-                videoEl.addEventListener('loadedmetadata', () => updateProgressUI(item));
+                videoEl.addEventListener('timeupdate', () => {
+                    updateProgressUI(item);
+                });
+                videoEl.addEventListener('loadedmetadata', () => {
+                    updateProgressUI(item);
+                    if (idx === currentVideoIndex && 'mediaSession' in navigator && navigator.mediaSession.setPositionState) {
+                        if (videoEl.duration && !isNaN(videoEl.duration)) {
+                            navigator.mediaSession.setPositionState({
+                                duration: videoEl.duration,
+                                playbackRate: videoEl.playbackRate,
+                                position: videoEl.currentTime
+                            });
+                        }
+                    }
+                });
 
                 // Sync Media Session state
                 videoEl.addEventListener('play', () => {
                     if ('mediaSession' in navigator) {
                         navigator.mediaSession.playbackState = 'playing';
+                        if (idx === currentVideoIndex && navigator.mediaSession.setPositionState && videoEl.duration) {
+                            navigator.mediaSession.setPositionState({
+                                duration: videoEl.duration,
+                                playbackRate: videoEl.playbackRate,
+                                position: videoEl.currentTime
+                            });
+                        }
                     }
                 });
                 videoEl.addEventListener('pause', () => {
@@ -1313,7 +1333,25 @@
                             videoEl.play().catch(() => { });
                         } else {
                             navigator.mediaSession.playbackState = 'paused';
+                            if (idx === currentVideoIndex && navigator.mediaSession.setPositionState && videoEl.duration) {
+                                navigator.mediaSession.setPositionState({
+                                    duration: videoEl.duration,
+                                    playbackRate: videoEl.playbackRate,
+                                    position: videoEl.currentTime
+                                });
+                            }
                         }
+                    }
+                });
+
+                // Handle looping and seeking
+                videoEl.addEventListener('seeked', () => {
+                    if (idx === currentVideoIndex && 'mediaSession' in navigator && navigator.mediaSession.setPositionState && videoEl.duration) {
+                        navigator.mediaSession.setPositionState({
+                            duration: videoEl.duration,
+                            playbackRate: videoEl.playbackRate,
+                            position: videoEl.currentTime
+                        });
                     }
                 });
 
@@ -1488,8 +1526,33 @@
                     video.pause();
                 }
             });
+            navigator.mediaSession.setActionHandler('seekto', (details) => {
+                const item = document.querySelector('.video-item[data-index="' + currentVideoIndex + '"]');
+                const video = item?.querySelector('video');
+                if (video && details.seekTime !== undefined) {
+                    video.currentTime = details.seekTime;
+                    if ('setPositionState' in navigator.mediaSession && video.duration) {
+                        navigator.mediaSession.setPositionState({
+                            duration: video.duration,
+                            playbackRate: video.playbackRate,
+                            position: video.currentTime
+                        });
+                    }
+                }
+            });
             navigator.mediaSession.setActionHandler('previoustrack', () => { isUserPaused = false; prevVideo(); });
             navigator.mediaSession.setActionHandler('nexttrack', () => { isUserPaused = false; nextVideo(); });
+
+            // Initial position state if duration is already loaded
+            const item = document.querySelector('.video-item[data-index="' + index + '"]');
+            const video = item?.querySelector('video');
+            if (video && video.duration && 'setPositionState' in navigator.mediaSession) {
+                navigator.mediaSession.setPositionState({
+                    duration: video.duration,
+                    playbackRate: video.playbackRate,
+                    position: video.currentTime
+                });
+            }
 
             // Background Keep-alive: Ensure state is consistent
             navigator.mediaSession.playbackState = isUserPaused ? 'paused' : 'playing';
