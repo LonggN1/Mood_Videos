@@ -1329,11 +1329,16 @@
                 videoEl.addEventListener('pause', () => {
                     if ('mediaSession' in navigator) {
                         // If it paused but it wasn't the user, and we're hidden, try to resume
+                        // For heavy videos, browsers are more aggressive at pausing.
                         if (document.visibilityState === 'hidden' && !isUserPaused) {
-                            videoEl.play().catch(() => { });
+                            setTimeout(() => {
+                                if (videoEl.paused && !isUserPaused) {
+                                    videoEl.play().catch(() => { });
+                                }
+                            }, 200);
                         } else {
                             navigator.mediaSession.playbackState = 'paused';
-                            if (idx === currentVideoIndex && navigator.mediaSession.setPositionState && videoEl.duration) {
+                            if (idx === currentVideoIndex && navigator.mediaSession.setPositionState && videoEl.duration && isFinite(videoEl.duration)) {
                                 navigator.mediaSession.setPositionState({
                                     duration: videoEl.duration,
                                     playbackRate: videoEl.playbackRate,
@@ -1346,12 +1351,27 @@
 
                 // Handle looping and seeking
                 videoEl.addEventListener('seeked', () => {
-                    if (idx === currentVideoIndex && 'mediaSession' in navigator && navigator.mediaSession.setPositionState && videoEl.duration) {
+                    if (idx === currentVideoIndex && 'mediaSession' in navigator && navigator.mediaSession.setPositionState && videoEl.duration && isFinite(videoEl.duration)) {
                         navigator.mediaSession.setPositionState({
                             duration: videoEl.duration,
                             playbackRate: videoEl.playbackRate,
                             position: videoEl.currentTime
                         });
+                    }
+                });
+
+                // Periodic sync for long videos to prevent progress drift/stutter on lockscreen
+                videoEl.addEventListener('timeupdate', () => {
+                    updateProgressUI(item);
+                    // Every 5 seconds, do a hard sync of position state for long videos
+                    if (idx === currentVideoIndex && videoEl.duration > 30 && Math.floor(videoEl.currentTime) % 5 === 0) {
+                         if ('mediaSession' in navigator && navigator.mediaSession.setPositionState && isFinite(videoEl.duration)) {
+                            navigator.mediaSession.setPositionState({
+                                duration: videoEl.duration,
+                                playbackRate: videoEl.playbackRate,
+                                position: videoEl.currentTime
+                            });
+                        }
                     }
                 });
 
@@ -1455,34 +1475,32 @@
 
         // Background caching algorithm for future videos
         function preloadNextVideos(currentIndex) {
-            // Preload 2 videos ahead to have them ready in browser cache
+            // Preload only 1 video ahead for better memory management on mobile with heavy videos
             const nextIdx = (currentIndex + 1) % videos.length;
-            const nextNextIdx = (currentIndex + 2) % videos.length;
 
-            [nextIdx, nextNextIdx].forEach(idx => {
-                const url = videos[idx];
-                if (!url) return;
+            const url = videos[nextIdx];
+            if (!url) return;
 
-                // Check if already in DOM
-                const existing = document.querySelector(`.video-item[data-index="${idx}"] video`);
-                if (existing) {
-                    existing.preload = 'auto';
-                    return;
-                }
+            // Check if already in DOM
+            const existing = document.querySelector(`.video-item[data-index="${nextIdx}"] video`);
+            if (existing) {
+                existing.preload = 'auto';
+                return;
+            }
 
-                // If not in DOM, use a lightweight prefetch
-                // We use a temporary hidden video element to trigger browser's internal cache
-                const prefetch = document.createElement('video');
-                prefetch.src = url;
-                prefetch.preload = 'auto';
-                prefetch.muted = true;
-                prefetch.style.display = 'none';
-                // Discard after some time or when it has buffered enough
-                prefetch.addEventListener('canplaythrough', () => {
-                    prefetch.src = '';
-                    prefetch.remove();
-                }, { once: true });
-            });
+            // Lightweight prefetch
+            const prefetch = document.createElement('video');
+            prefetch.src = url;
+            prefetch.preload = 'auto';
+            prefetch.muted = true;
+            prefetch.style.display = 'none';
+            prefetch.addEventListener('canplaythrough', () => {
+                prefetch.src = '';
+                prefetch.remove();
+            }, { once: true });
+            
+            // Safety timeout to avoid dangling elements
+            setTimeout(() => { if (prefetch.parentNode) prefetch.remove(); }, 15000);
         }
 
         function nextVideo() { showVideo(currentVideoIndex + 1); }
