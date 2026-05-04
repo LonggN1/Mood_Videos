@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 
 <head>
@@ -840,7 +840,18 @@
                 'video/not_compare/Not_compare_2.mp4',
                 'video/not_compare/Not_compare_3.mp4',
                 'video/not_compare/Not_compare_4.mp4',
-                'video/not_compare/Not_compare_5.mp4'
+                'video/not_compare/Not_compare_5.mp4',
+                'video/not_compare/7630403926847753479.mp4',
+                'video/not_compare/7306087422071246082.mp4',
+                'video/not_compare/7340054011501907202.mp4',
+                'video/not_compare/7475341462696185106.mp4',
+                'video/not_compare/7511236656356134152.mp4',
+                'video/not_compare/7575767447958015250.mp4',
+                'video/not_compare/7628880066944060693.mp4',
+                'video/not_comapre/7599641991072255240.mp4',
+                'video/not_compare/7631139874220936469.mp4',
+                'video/not_compare/7628443815292046613.mp4',
+                'video/not_compare/7632549256418577684.mp4'
             ],
             'sad': [
                 // --- THÊM VIDEO BUỒN VÀO ĐÂY ---
@@ -898,7 +909,8 @@
                 'video/demotivated/7633407928636050696.mp4',
                 'video/demotivated/7587285668171140373.mp4',
                 'video/demotivated/7624526904300719381.mp4',
-                'video/demotivated/7633464766974971144.mp4'
+                'video/demotivated/7633464766974971144.mp4',
+                'video/demotivated/7512520381715008769.mp4'
             ],
             'mindset': [
                 'video/mindset/7456358107262831879.mp4',
@@ -1044,6 +1056,7 @@
                 'video/complain/7623653259605232914.mp4',
                 'video/complain/7634505548204969236.mp4',
                 'video/complain/7634562511819361554.mp4',
+                'video/complain/7512100425424735495.mp4'
             ],
             'vague': [
                 // --- THÊM VIDEO MÔNG LUNG VÀO ĐÂY ---
@@ -1159,7 +1172,7 @@
                 videoEl.setAttribute('disablePictureInPicture', '');
                 videoEl.dataset.index = idx;
                 videoEl.className = 'w-full h-full object-contain';
-                
+
                 // Optimized Preload Algorithm:
                 // - Current video: 'auto' (highest priority)
                 // - Next video: 'auto' (high priority to ensure smooth swipe)
@@ -1294,7 +1307,7 @@
                     if ('mediaSession' in navigator) {
                         // If it paused but it wasn't the user, and we're hidden, try to resume
                         if (document.visibilityState === 'hidden' && !isUserPaused) {
-                            videoEl.play().catch(() => {});
+                            videoEl.play().catch(() => { });
                         } else {
                             navigator.mediaSession.playbackState = 'paused';
                         }
@@ -1373,11 +1386,11 @@
                             video.currentTime = 0;
                             video.volume = isMuted ? 0 : currentVolume;
                             isUserPaused = false;
-                            
+
                             // High-priority play
                             video.play().catch(() => { });
                             updateMediaSession(currentVideoIndex);
-                            
+
                             // Once current is playing, ensure the next one is pre-buffering
                             setTimeout(() => {
                                 preloadNextVideos(currentVideoIndex);
@@ -1402,18 +1415,18 @@
             // Preload 2 videos ahead to have them ready in browser cache
             const nextIdx = (currentIndex + 1) % videos.length;
             const nextNextIdx = (currentIndex + 2) % videos.length;
-            
+
             [nextIdx, nextNextIdx].forEach(idx => {
                 const url = videos[idx];
                 if (!url) return;
-                
+
                 // Check if already in DOM
                 const existing = document.querySelector(`.video-item[data-index="${idx}"] video`);
                 if (existing) {
                     existing.preload = 'auto';
                     return;
                 }
-                
+
                 // If not in DOM, use a lightweight prefetch
                 // We use a temporary hidden video element to trigger browser's internal cache
                 const prefetch = document.createElement('video');
@@ -1459,7 +1472,7 @@
                 const video = item?.querySelector('video');
                 if (video) {
                     isUserPaused = false;
-                    video.play().catch(() => {});
+                    video.play().catch(() => { });
                 }
             });
             navigator.mediaSession.setActionHandler('pause', () => {
@@ -1472,7 +1485,7 @@
             });
             navigator.mediaSession.setActionHandler('previoustrack', () => { isUserPaused = false; prevVideo(); });
             navigator.mediaSession.setActionHandler('nexttrack', () => { isUserPaused = false; nextVideo(); });
-            
+
             // Background Keep-alive: Ensure state is consistent
             navigator.mediaSession.playbackState = isUserPaused ? 'paused' : 'playing';
         }
@@ -2118,7 +2131,7 @@
                 const video = item?.querySelector('video');
                 if (video && video.paused && document.visibilityState === 'hidden') {
                     // Try to resume if it was accidentally paused by the system in background
-                    video.play().catch(() => {});
+                    video.play().catch(() => { });
                 }
             }
         }, 2000);
