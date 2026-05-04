@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 
 <head>
@@ -1399,12 +1399,14 @@
                                 preloadNextVideos(currentVideoIndex);
                             }, 1000);
                         } else {
-                            // If it's the next video, set to auto but don't play
+                            // Always pause non-current videos to avoid audio overlap
+                            video.pause();
+
+                            // If it's the next video, set to auto to preload
                             const isNext = idx === (currentVideoIndex + 1) % videos.length;
                             if (isNext) {
                                 video.preload = 'auto';
                             } else {
-                                video.pause();
                                 video.preload = 'metadata';
                             }
                         }
